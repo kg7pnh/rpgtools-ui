@@ -2,28 +2,29 @@
   <div class="app">
     <AppHeader fixed>
       <SidebarToggler class="d-lg-none" display="md" mobile />
+      <SidebarToggler class="d-md-down-none" display="lg" />
       <b-link class="navbar-brand" to="#">
         <img
           class="navbar-brand-full"
           src="img/dice-d20-solid.svg"
           width="15"
           height="15"
-          alt="RPG Tools Logo"
+          alt="RPGTools Logo"
         />
         <img
           class="navbar-brand-minimized"
           src="img/dice-d20-solid.svg"
           width="15"
           height="15"
-          alt="RPG Tools Logo"
+          alt="RPGTools Logo"
         />
-        <span class="rpgtools_logo">RPG Tools</span>
+        <span class="rpgtools_logo">RPGTools</span>
       </b-link>
-      <SidebarToggler class="d-md-down-none" display="lg" />
+      <!-- <SidebarToggler class="d-md-down-none" display="lg" /> -->
       <b-navbar-nav class="ml-auto">
         <b-nav-item class="d-md-down-none"></b-nav-item>
-        <DefaultHeaderDropdownAccnt />
-        <login />
+        <HeaderDropdownAccount />
+        <Login />
       </b-navbar-nav>
     </AppHeader>
     <div class="app-body">
@@ -52,8 +53,7 @@
 </template>
 
 <script>
-import nav from "@/Navigation";
-
+import nav from "../Navigation";
 import {
   Header as AppHeader,
   SidebarToggler,
@@ -62,34 +62,27 @@ import {
   SidebarForm,
   SidebarHeader,
   SidebarMinimizer,
-  SidebarNav,
-  Footer as TheFooter,
-  Breadcrumb
+  SidebarNav
 } from "@coreui/vue";
-
-import DefaultHeaderDropdownAccnt from "./DefaultHeaderDropdownAccnt";
+import HeaderDropdownAccount from "./HeaderDropdownAccount";
+import Login from "../views/components/Login";
+import { store } from "../Datastore";
 
 export default {
   name: "DefaultContainer",
   components: {
     AppHeader,
     AppSidebar,
-    TheFooter,
-    Breadcrumb,
     SidebarForm,
     SidebarFooter,
     SidebarToggler,
     SidebarHeader,
     SidebarNav,
-    SidebarMinimizer
+    SidebarMinimizer,
+    HeaderDropdownAccount,
+    Login
   },
   computed: {
-    breadcrumbs() {
-      return this.$route.matched.filter(
-        route =>
-          route.name != "DefaultContainer" && (route.name || route.meta.label)
-      );
-    },
     navItems() {
       return nav.items.filter(d => {
         return d.adminOnly ? store.state.user.is_superuser : true;
