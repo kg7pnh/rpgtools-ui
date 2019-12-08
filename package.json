@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "dev-serve": "vue-cli-service serve --port 4545",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "serve": "vue-cli-service serve --port 4545"
   },
   "dependencies": {
     "@coreui/coreui": "^2.1.12",
@@ -45,8 +46,11 @@
     "vue-form-wizard": "^0.8.4",
     "vue-input-tag": "^2.0.6",
     "vue-json-pretty": "^1.6.2",
+    "vue-json-viewer": "^2.2.8",
     "vue-moment": "^4.0.0",
+    "vue-multiselect": "^2.1.6",
     "vue-router": "^3.1.3",
+    "vue-select": "^3.2.0",
     "vue-toastr": "^2.1.2",
     "vuejs-dialog": "^1.4.1",
     "vuex": "^3.1.1"
