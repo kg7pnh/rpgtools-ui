@@ -32,7 +32,7 @@ export default {
     },
     {
       name: "People",
-      url: "/people",
+      url: "/persons",
       icon: "fa fa-users",
       adminOnly: false
     },

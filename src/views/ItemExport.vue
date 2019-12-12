@@ -19,7 +19,7 @@ export default {
   },
   props: ["item"],
   computed: {
-    itemStripped: function(val) {
+    itemStripped: function() {
       return _.chain(this.item)
         .omit(["_id", "id", "created", "modified"])
         .toPairs()
@@ -28,25 +28,5 @@ export default {
         .value();
     }
   }
-  // data() {
-  //   return {
-  //     itemStripped: null
-  //   };
-  // },
-  // watch: {
-  //   item: function(val) {
-  //     this.itemStripped = _.chain(this.item)
-  //       .omit([
-  //         "_id",
-  //         "id",
-  //         "created",
-  //         "modified"
-  //       ])
-  //       .toPairs()
-  //       .sortBy(0)
-  //       .fromPairs()
-  //       .value();
-  //   }
-  // }
 };
 </script>

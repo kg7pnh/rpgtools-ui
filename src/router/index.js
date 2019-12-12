@@ -6,16 +6,22 @@ const DefaultContainer = () => import("@/containers/DefaultContainer.vue");
 const Home = () => import("@/views/Home.vue");
 const CharacterGeneration = () => import("@/views/CharacterGeneration.vue");
 const Item = () => import("@/views/Item.vue");
+const ItemDetail = () => import("@/views/ItemDetail.vue");
+const ItemExport = () => import("@/views/ItemExport.vue");
+const ItemHistory = () => import("@/views/ItemHistory.vue");
 const ItemList = () => import("@/views/ItemList.vue");
 
 function generateProps(route) {
   let name = route["name"];
+  let path = route["path"];
+  let itemId = path.split("/")[2];
+
   let props = {};
 
   switch (name) {
     case "Books":
       props["name"] = name;
-      props["itemsCountState"] = "booksCount";
+      props["itemState"] = "book";
       props["itemsState"] = "books";
       props["pluralName"] = "Books";
       props["singularName"] = "Book";
@@ -23,29 +29,27 @@ function generateProps(route) {
     case "BookDetails":
       props["name"] = name;
       props["itemHistoryState"] = "bookHistory";
-      props["itemsStateName"] = "books";
-      props["origin"] = "books";
+      props["itemId"] = itemId;
+      props["itemsState"] = "books";
       props["pluralName"] = "Books";
       props["singularName"] = "Book";
       break;
     case "BookFormats":
       props["name"] = name;
-      props["itemsCountState"] = "bookFormatsCount";
-      props["itemsState"] = "bookFormats";
+      props["itemsState"] = "bookformats";
       props["pluralName"] = "BookFormats";
       props["singularName"] = "BookFormat";
       break;
     case "BookFormatDetails":
       props["name"] = name;
       props["itemHistoryState"] = "bookFormatHistory";
-      props["itemsStateName"] = "bookFormats";
-      props["origin"] = "bookformats";
+      props["itemId"] = itemId;
+      props["itemsState"] = "bookformats";
       props["pluralName"] = "BookFormats";
       props["singularName"] = "BookFormat";
       break;
     case "Games":
       props["name"] = name;
-      props["itemsCountState"] = "gamesCount";
       props["itemsState"] = "games";
       props["pluralName"] = "Games";
       props["singularName"] = "Game";
@@ -53,29 +57,27 @@ function generateProps(route) {
     case "GameDetails":
       props["name"] = name;
       props["itemHistoryState"] = "gameHistory";
-      props["itemsStateName"] = "games";
-      props["origin"] = "games";
+      props["itemId"] = itemId;
+      props["itemsState"] = "games";
       props["pluralName"] = "Games";
       props["singularName"] = "Game";
       break;
     case "GameSystems":
       props["name"] = name;
-      props["itemsCountState"] = "gameSystemsCount";
-      props["itemsState"] = "gameSystems";
+      props["itemsState"] = "gamesystems";
       props["pluralName"] = "GameSystems";
       props["singularName"] = "GameSystem";
       break;
     case "GameSystemDetails":
       props["name"] = name;
       props["itemHistoryState"] = "gameSystemHistory";
-      props["itemsStateName"] = "gameSystems";
-      props["origin"] = "gamesystems";
+      props["itemId"] = itemId;
+      props["itemsState"] = "gamesystems";
       props["pluralName"] = "GameSystems";
       props["singularName"] = "GameSystem";
       break;
     case "Organizations":
       props["name"] = name;
-      props["itemsCountState"] = "organizationsCount";
       props["itemsState"] = "organizations";
       props["pluralName"] = "Organizations";
       props["singularName"] = "Organization";
@@ -83,29 +85,27 @@ function generateProps(route) {
     case "OrganizationDetails":
       props["name"] = name;
       props["itemHistoryState"] = "organizationHistory";
-      props["itemsStateName"] = "organizations";
-      props["origin"] = "organizations";
+      props["itemId"] = itemId;
+      props["itemsState"] = "organizations";
       props["pluralName"] = "Organizations";
       props["singularName"] = "Organization";
       break;
     case "People":
       props["name"] = name;
-      props["itemsCountState"] = "peopleCount";
-      props["itemsState"] = "people";
+      props["itemsState"] = "persons";
       props["pluralName"] = "People";
       props["singularName"] = "Person";
       break;
     case "PersonDetails":
       props["name"] = name;
       props["itemHistoryState"] = "personHistory";
-      props["itemsStateName"] = "people";
-      props["origin"] = "people";
+      props["itemId"] = itemId;
+      props["itemsState"] = "persons";
       props["pluralName"] = "People";
       props["singularName"] = "Person";
       break;
     case "Publishers":
       props["name"] = name;
-      props["itemsCountState"] = "publishersCount";
       props["itemsState"] = "publishers";
       props["pluralName"] = "Publishers";
       props["singularName"] = "Publisher";
@@ -113,14 +113,13 @@ function generateProps(route) {
     case "PublisherDetails":
       props["name"] = name;
       props["itemHistoryState"] = "publisherHistory";
-      props["itemsStateName"] = "publishers";
-      props["origin"] = "publishers";
+      props["itemId"] = itemId;
+      props["itemsState"] = "publishers";
       props["pluralName"] = "Publishers";
       props["singularName"] = "Publisher";
       break;
     case "Schemas":
       props["name"] = name;
-      props["itemsCountState"] = "schemasCount";
       props["itemsState"] = "schemas";
       props["pluralName"] = "Schemas";
       props["singularName"] = "Schema";
@@ -128,8 +127,8 @@ function generateProps(route) {
     case "SchemaDetails":
       props["name"] = name;
       props["itemHistoryState"] = "schemaHistory";
-      props["itemsStateName"] = "schemas";
-      props["origin"] = "schemas";
+      props["itemId"] = itemId;
+      props["itemsState"] = "schemas";
       props["pluralName"] = "Schemas";
       props["singularName"] = "Schema";
       break;
@@ -160,7 +159,24 @@ let routes = [
         path: "books/:item_id",
         name: "BookDetails",
         props: generateProps,
-        component: Item
+        component: Item,
+        children: [
+          {
+            path: "details",
+            name: "BookDetail",
+            component: ItemDetail
+          },
+          {
+            path: "details",
+            name: "BookExport",
+            component: ItemExport
+          },
+          {
+            path: "details",
+            name: "BookHistory",
+            component: ItemHistory
+          }
+        ]
       },
       {
         path: "bookformats",
@@ -172,7 +188,24 @@ let routes = [
         path: "bookformats/:item_id",
         name: "BookFormatDetails",
         props: generateProps,
-        component: Item
+        component: Item,
+        children: [
+          {
+            path: "details",
+            name: "BookFormatDetail",
+            component: ItemDetail
+          },
+          {
+            path: "details",
+            name: "BookFormatExport",
+            component: ItemExport
+          },
+          {
+            path: "details",
+            name: "BookFormatHistory",
+            component: ItemHistory
+          }
+        ]
       },
       {
         path: "games",
@@ -184,7 +217,24 @@ let routes = [
         path: "games/:item_id",
         name: "GameDetails",
         props: generateProps,
-        component: Item
+        component: Item,
+        children: [
+          {
+            path: "details",
+            name: "GameDetail",
+            component: ItemDetail
+          },
+          {
+            path: "details",
+            name: "GameExport",
+            component: ItemExport
+          },
+          {
+            path: "details",
+            name: "GameHistory",
+            component: ItemHistory
+          }
+        ]
       },
       {
         path: "gamesystems",
@@ -196,7 +246,24 @@ let routes = [
         path: "gamesystems/:item_id",
         name: "GameSystemDetails",
         props: generateProps,
-        component: Item
+        component: Item,
+        children: [
+          {
+            path: "details",
+            name: "GameSystemDetail",
+            component: ItemDetail
+          },
+          {
+            path: "details",
+            name: "GameSystemExport",
+            component: ItemExport
+          },
+          {
+            path: "details",
+            name: "GameSystemHistory",
+            component: ItemHistory
+          }
+        ]
       },
       {
         path: "home",
@@ -213,19 +280,53 @@ let routes = [
         path: "organizations/:item_id",
         name: "OrganizationDetails",
         props: generateProps,
-        component: Item
+        component: Item,
+        children: [
+          {
+            path: "details",
+            name: "OrganizationDetail",
+            component: ItemDetail
+          },
+          {
+            path: "details",
+            name: "OrganizationExport",
+            component: ItemExport
+          },
+          {
+            path: "details",
+            name: "OrganizationHistory",
+            component: ItemHistory
+          }
+        ]
       },
       {
-        path: "people",
+        path: "persons",
         name: "People",
         props: generateProps,
         component: ItemList
       },
       {
-        path: "people/:item_id",
+        path: "persons/:item_id",
         name: "PersonDetails",
         props: generateProps,
-        component: Item
+        component: Item,
+        children: [
+          {
+            path: "details",
+            name: "PersonDetail",
+            component: ItemDetail
+          },
+          {
+            path: "details",
+            name: "PersonExport",
+            component: ItemExport
+          },
+          {
+            path: "details",
+            name: "PersonHistory",
+            component: ItemHistory
+          }
+        ]
       },
       {
         path: "publishers",
@@ -237,7 +338,24 @@ let routes = [
         path: "publishers/:item_id",
         name: "PublisherDetails",
         props: generateProps,
-        component: Item
+        component: Item,
+        children: [
+          {
+            path: "details",
+            name: "PublisherDetail",
+            component: ItemDetail
+          },
+          {
+            path: "details",
+            name: "PublisherExport",
+            component: ItemExport
+          },
+          {
+            path: "details",
+            name: "PublisherHistory",
+            component: ItemHistory
+          }
+        ]
       },
       {
         path: "schemas",
@@ -249,7 +367,24 @@ let routes = [
         path: "schemas/:item_id",
         name: "SchemaDetails",
         props: generateProps,
-        component: Item
+        component: Item,
+        children: [
+          {
+            path: "details",
+            name: "SchemaDetail",
+            component: ItemDetail
+          },
+          {
+            path: "details",
+            name: "SchemaExport",
+            component: ItemExport
+          },
+          {
+            path: "details",
+            name: "SchemaHistory",
+            component: ItemHistory
+          }
+        ]
       }
     ]
   }

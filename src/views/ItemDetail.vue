@@ -1,5 +1,5 @@
 <template>
-  <div :class="pageStatus">
+  <div :class="pageStatus" class="animated fadeIn">
     <div>
       <b-button-group v-if="user.is_superuser" size="sm">
         <b-button
@@ -821,7 +821,7 @@ let marked = require("marked");
 export default {
   computed: {
     bookFormats: function() {
-      return store.state.bookFormats
+      return store.state.bookformats
         .map(d => {
           return { text: d.name, value: d._id };
         })
@@ -915,7 +915,8 @@ export default {
   },
   methods: {
     cancelEdit() {
-      router.push(`/${this.origin}`);
+      this.$store.state[this.itemsState] = [];
+      router.push(`/${this.itemsState}`);
     },
     loadItem: function(item) {
       let vm = this;
@@ -968,6 +969,7 @@ export default {
       this.validateItem();
     },
     saveItem: function() {
+      this.$store.state[this.itemsState] = [];
       let item = {};
 
       item["id"] = this.item_id;
@@ -976,7 +978,7 @@ export default {
       item["read_me"] = this.read_me;
       item["url"] = this.url;
 
-      if (this.singularName == "Book") {
+      if (this.itemsState == "books") {
         item["abbreviation"] = this.abbreviation;
         item["art_assistant"] = this.art_assistant;
         item["art_director"] = this.art_director;
@@ -1018,7 +1020,7 @@ export default {
           type: "put" + this.singularName,
           item: item
         })
-        .then(router.push(`/${this.origin}`));
+        .then(router.push(`/${this.itemsState}`));
     },
     updateMarkdown: _.debounce(function(e) {
       this.markdownInput = e;
@@ -1048,7 +1050,7 @@ export default {
     "isItemNew",
     "isItemImported",
     "item",
-    "origin",
+    "itemsState",
     "pluralName",
     "singularName"
   ],

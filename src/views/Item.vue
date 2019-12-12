@@ -1,32 +1,32 @@
 <template>
-  <div>
+  <div class="animated fadeIn">
     <b-card bg-variant="white">
       <b-tabs v-if="item_id">
         <b-tab :title="this.singularName" active>
-          <Detail
+          <ItemDetail
             :item_id="item_id"
             :item="item"
             :isItemNew="isItemNew"
             :isItemImported="isItemImported"
-            :origin="origin"
+            :itemsState="itemsState"
             :pluralName="pluralName"
             :singularName="singularName"
           />
         </b-tab>
         <b-tab v-if="user.is_superuser" title="Export">
-          <Export :item="item" />
+          <ItemExport :item="item" />
         </b-tab>
         <b-tab v-if="user.is_superuser" title="History">
-          <History :history="history" />
+          <ItemHistory :history="history" />
         </b-tab>
       </b-tabs>
-      <Detail
+      <ItemDetail
         v-if="!item_id"
         :item="item"
         :item_id="item_id"
         :isItemNew="isItemNew"
         :isItemImported="isItemImported"
-        :origin="origin"
+        :itemsState="itemsState"
         :pluralName="pluralName"
         :singularName="singularName"
       />
@@ -36,15 +36,17 @@
 
 <script>
 import { store } from "../Datastore";
-import Detail from "../views/Detail";
-import Export from "../views/Export";
-import History from "../views/History";
+import ItemDetail from "../views/ItemDetail";
+import ItemExport from "../views/ItemExport";
+import ItemHistory from "../views/ItemHistory";
+import router from "../router/index";
+import _ from "lodash";
 
 export default {
   components: {
-    Detail,
-    Export,
-    History
+    ItemDetail,
+    ItemExport,
+    ItemHistory
   },
   data() {
     return {
@@ -70,7 +72,6 @@ export default {
           change["index"] = j;
           change["type"] = changeEntry["type"];
           change["changes"] = changeEntry["changes"];
-          let entries = changeEntry["changes"];
           changes.push(change);
         }
       }
@@ -81,12 +82,27 @@ export default {
     }
   },
   created: function() {
-    store.dispatch("getBookFormats");
-    store.dispatch("getContributors");
-    store.dispatch("getGames");
-    store.dispatch("getPublishers");
+    store.dispatch({
+      type: "getItems",
+      itemsPath: "books"
+    });
+    store.dispatch({
+      type: "getItems",
+      itemsPath: "bookformats"
+    });
+    store.dispatch({
+      type: "getItems",
+      itemsPath: "contributors"
+    });
+    store.dispatch({
+      type: "getItems",
+      itemsPath: "games"
+    });
+    store.dispatch({
+      type: "getItems",
+      itemsPath: "publishers"
+    });
 
-    let comp = this;
     let item_id_param = this.$route.params.item_id;
     switch (item_id_param) {
       case "new":
@@ -102,7 +118,7 @@ export default {
             type: "get" + this.pluralName
           })
           .then(() => {
-            this.item = store.state[this.itemsStateName].find(d => {
+            this.item = store.state[this.itemsState].find(d => {
               return d.id === this.item_id;
             });
             if (!this.item) {
@@ -110,7 +126,7 @@ export default {
                 "showError",
                 `${this.singularName} with id '${this.item_id}' not found.`
               );
-              router.push(`/${this.origin}`);
+              router.push(`/${this.itemsState}`);
             } else {
               store.dispatch({
                 type: "get" + this.singularName + "History",
@@ -127,10 +143,7 @@ export default {
     itemHistoryState: {
       type: String
     },
-    itemsStateName: {
-      type: String
-    },
-    origin: {
+    itemsState: {
       type: String
     },
     pluralName: {

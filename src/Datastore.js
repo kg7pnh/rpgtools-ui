@@ -11,39 +11,60 @@ Vue.use(Vuex);
 
 export const store = new Vuex.Store({
   state: {
+    // system state
     access_token: localStorage.getItem("access_token"),
     user: {},
-    bookFormats: [],
-    bookFormatHistory: [],
-    books: [],
-    bookHistory: [],
-    contributors: [],
-    games: [],
-    gameHistory: [],
-    gameSystems: [],
-    gameSystemHistory: [],
-    people: [],
-    personHistory: [],
-    organizations: [],
-    organizationHisotry: [],
-    publishers: [],
-    publisherHistory: [],
-    schemas: [],
-    schemaHistory: [],
-    workflows: [],
-    workflowHistory: [],
     error: "",
-    booksCount: 0,
-    bookFormatsCount: 0,
-    contributorsCount: 0,
-    gamesCount: 0,
-    gameSystemsCount: 0,
-    importedBook: [],
-    organizationsCount: 0,
-    peopleCount: 0,
-    publishersCount: 0,
-    schemasCount: 0,
-    workflowsCount: 0
+
+    // Book state
+    book: {},
+    bookHistory: [],
+    books: [],
+
+    // BookFomat state
+    bookformat: {},
+    bookFormatHistory: [],
+    bookformats: [],
+
+    // Contributors state
+    contributors: [],
+
+    // Game state
+    game: {},
+    gameHistory: [],
+    games: [],
+
+    // GameSystem state
+    gamesystem: {},
+    gameSystemHistory: [],
+    gamesystems: [],
+
+    // Person state
+    people: [], // TODO: replace with persons: []
+
+    person: {},
+    personHistory: [],
+    persons: [],
+
+    // Organization state
+    organization: {},
+    organizationHisotry: [],
+    organizations: [],
+
+    // Publisher state
+    publisher: {},
+    publisherHistory: [],
+    publishers: [],
+
+    // Schema state
+    schema: {},
+    schemaHistory: [],
+    schemas: [],
+
+    // Workflow state
+    workflow: {},
+    workflowHistory: [],
+    workflows: []
   },
   getters: {
     /* ------------------------ user related state  ------------------------ */
@@ -71,6 +92,11 @@ export const store = new Vuex.Store({
     },
     setError(state, error) {
       state.error = error;
+    },
+    setItems(state, context) {
+      let itemsType = context.itemsType;
+      let data = context.data;
+      state[itemsType] = data;
     },
     setBooks(state, books) {
       state.books = books;
@@ -128,6 +154,30 @@ export const store = new Vuex.Store({
     }
   },
   actions: {
+    deleteItem({ dispatch, state }, context) {
+      if (state.access_token) {
+        let itemsPath = context.itemsPath;
+        let itemId = context.itemId;
+        let endPoint = `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}/delete/${itemId}`;
+        let method = "delete";
+        return axios({
+          method: method,
+          url: endPoint,
+          headers: { Authorization: "Bearer " + state.access_token }
+        })
+          .then(() => {
+            return Promise.resolve(
+              dispatch({
+                type: "getItems",
+                itemsPath: itemsPath
+              })
+            );
+          })
+          .catch(error => {
+            return Promise.resolve(dispatch("handleRequestError", error));
+          });
+      }
+    },
     deleteBook({ dispatch, state }, context) {
       let book = context.item;
       let endPoint = `${rpgtoolsApiEndpoint}/api/v1/books/delete/${book.id}`;
@@ -277,6 +327,30 @@ export const store = new Vuex.Store({
         .catch(error => {
           return Promise.resolve(dispatch("handleRequestError", error));
         });
+    },
+    getItems({ commit, state, dispatch }, context) {
+      if (state.access_token) {
+        let itemsPath = context.itemsPath;
+        let endPoint = `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}`;
+        let header = {
+          headers: { Authorization: "Bearer " + state.access_token }
+        };
+        return axios
+          .get(endPoint, header)
+          .then(response => {
+            let items = response.data;
+            return Promise.resolve(
+              commit({
+                type: "setItems",
+                itemsType: itemsPath,
+                data: items
+              })
+            );
+          })
+          .catch(error => {
+            return Promise.resolve(dispatch("handleRequestError", error));
+          });
+      }
     },
     getBookHistory({ commit, dispatch }, context) {
       let bookId = context.itemId;

@@ -79,7 +79,7 @@
       </div>
     </b-card>
 
-    <!-- TODO: add delete confirmation modal -->
+    <!-- Delete Confirmation Modal -->
     <b-modal
       id="delete-confirmation-modal"
       no-close-on-backdrop
@@ -90,7 +90,11 @@
       :title="deleteModalTitle"
     >
       <div class="d-block text-center">
-        <p>Are you sure you want to delete "{{ this.selectedItem.name }}"?</p>
+        <p>
+          Are you sure you want to delete the {{ this.singularName }} named "{{
+            this.selectedItem.name
+          }}"?
+        </p>
         <p>This action can not be undone!</p>
       </div>
 
@@ -117,27 +121,15 @@
 </template>
 
 <script>
-import Vue from "vue";
 import { store } from "../Datastore";
 import router from "../router/index";
-import naturalCompare from "natural-compare";
 
 export default {
-  components: {},
   props: {
     name: {
       type: String
     },
-    addModalTitle: {
-      type: String
-    },
-    editModalTitle: {
-      type: String
-    },
     itemsState: {
-      type: String
-    },
-    itemsCountState: {
       type: String
     },
     pluralName: {
@@ -149,11 +141,7 @@ export default {
   },
   computed: {
     items: function() {
-      return store.state[this.itemsState];
-    },
-    itemCount: function() {
-      let itemsCountState = this.pluralName + "Count";
-      return store.state[itemsCountState];
+      return this.$store.state[this.itemsState];
     },
     user: function() {
       return store.state.user;
@@ -183,31 +171,40 @@ export default {
   },
   mounted() {
     this.$store.dispatch({
-      type: "get" + this.pluralName
+      type: "getItems",
+      itemsPath: this.itemsState
     });
     this.updateInterval = setInterval(() => {
       this.$store.dispatch({
-        type: "get" + this.pluralName
+        type: "getItems",
+        itemsPath: this.itemsState
       });
     }, 300000);
   },
   methods: {
     addItem: function() {
-      router.push(`${this.pluralName.toLowerCase()}/new`);
+      this.$store.state[this.itemsState] = [];
+      router.push(`/${this.itemsState}/new`);
     },
     cancelDeleteItem() {
       this.$store.dispatch({
-        type: "get" + this.pluralName
+        type: "getItems",
+        itemsPath: this.itemsState
       });
       this.showDeleteConfirmationModal = false;
     },
     deleteItem() {
       this.$store.dispatch({
-        type: "delete" + this.singularName,
-        item: this.selectedItem
+        type: "deleteItem",
+        itemsPath: this.itemsState,
+        itemId: this.selectedItem.id
+        // type: "delete" + this.singularName,
+        // item: this.selectedItem
       });
       this.showDeleteConfirmationModal = false;
       this.selectedItem = {};
+      this.$store.state[this.itemsState] = [];
+      router.push(`/${this.itemsState}`);
     },
     deleteItemConfirmation(item) {
       this.selectedItem = item;
@@ -215,7 +212,7 @@ export default {
       this.showDeleteConfirmationModal = true;
     },
     openItem(id) {
-      router.push(`${this.pluralName.toLowerCase()}/${id}`);
+      router.push(`/${this.itemsState}/${id}`);
     },
     importItem: function() {
       alert("importItem");
