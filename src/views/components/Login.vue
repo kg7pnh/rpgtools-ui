@@ -26,6 +26,7 @@
             @keypress.enter="signIn"
             placeholder
             type="text"
+            :autofocus="true"
           ></b-form-input>
         </b-input-group>
         <b-input-group prepend="Password" class="mb-3">
@@ -37,7 +38,13 @@
           ></b-form-input>
         </b-input-group>
         <div slot="modal-footer">
-          <b-button id="signin-button" variant="primary" @click="signIn" class="float-right">Sign In</b-button>
+          <b-button
+            id="signin-button"
+            variant="primary"
+            @click="signIn"
+            class="float-right"
+            >Sign In</b-button
+          >
         </div>
       </b-modal>
     </div>
@@ -64,7 +71,7 @@ export default {
   },
   computed: {
     signInLabel: function() {
-      if (!!store.state.access_token) {
+      if (store.state.access_token) {
         return "Sign Out";
       }
       return "Sign In";

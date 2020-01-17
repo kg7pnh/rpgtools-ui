@@ -7,63 +7,64 @@ export default {
       adminOnly: false
     },
     {
-      name: "Player Tools",
-      icon: "fa fa-cog",
-      adminOnly: false,
-      children: [
-        {
-          name: "Character Generation",
-          url: "/charactergeneration",
-          icon: "fa fa-tasks"
-        }
-      ]
+      name: "Generators",
+      url: "/generators",
+      icon: "fa fa-tasks",
+      adminOnly: false
     },
     {
-      name: "Game Master Tools",
-      icon: "fa fa-cogs",
-      adminOnly: true,
-      children: [
-        {
-          name: "Books",
-          url: "/books",
-          icon: "fa fa-book"
-        },
-        {
-          name: "Book Formats",
-          url: "/bookformats",
-          icon: "fa fa-book"
-        },
-        {
-          name: "Games",
-          url: "/games",
-          icon: "fa fa-gamepad"
-        },
-        {
-          name: "Game Systems",
-          url: "/gamesystems",
-          icon: "fa fa-gamepad"
-        },
-        {
-          name: "Organizations",
-          url: "/organizations",
-          icon: "fa fa-sitemap"
-        },
-        {
-          name: "Publishers",
-          url: "/publishers",
-          icon: "fa fa-building"
-        },
-        {
-         name: "People",
-         url: "/people",
-         icon: "fa fa-users"
-        },
-        {
-         name: "Schemas",
-         url: "/schemas",
-         icon: "fa fa-file"
-        }
-      ]
+      name: "Publishers",
+      url: "/publishers",
+      icon: "fa fa-building",
+      adminOnly: false
+    },
+    {
+      name: "Games",
+      url: "/games",
+      icon: "fa fa-gamepad",
+      adminOnly: false
+    },
+    {
+      name: "Books",
+      url: "/books",
+      icon: "fa fa-book",
+      adminOnly: false
+    },
+    {
+      name: "People",
+      url: "/persons",
+      icon: "fa fa-users",
+      adminOnly: false
+    },
+    {
+      name: "Organizations",
+      url: "/organizations",
+      icon: "fa fa-sitemap",
+      adminOnly: false
+    },
+    {
+      name: "Book Formats",
+      url: "/bookformats",
+      icon: "fa fa-book",
+      adminOnly: true
+    },
+    {
+      name: "Game Systems",
+      url: "/gamesystems",
+      icon: "fa fa-gamepad",
+      adminOnly: true
+    },
+    {
+      name: "Schemas",
+      url: "/schemas",
+      icon: "fa fa-file",
+      adminOnly: true
+    },
+    {
+      name: "Workflows",
+      url: "/workflows",
+      icon: "fa fa-file",
+      adminOnly: true
     }
   ]
 };

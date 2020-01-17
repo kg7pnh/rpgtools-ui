@@ -1,4 +1,10 @@
-# rpgtools-ui
+<img src="public/img/dice-d20-solid.svg"
+    width="35"
+    height="35"
+    alt="RPGTools"
+/>
+RPGtools-UI
+==
 
 ## Project setup
 ```

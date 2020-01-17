@@ -1,14 +1,20 @@
 <template>
   <AppHeaderDropdown right no-caret>
     <template #header>
-      <img v-if="user.thumbnailphoto" class="header-user-photo" :src="user.thumbnailphoto">
+      <img
+        v-if="user.thumbnailphoto"
+        class="header-user-photo"
+        :src="user.thumbnailphoto"
+      />
       <div v-if="!user.thumbnailphoto" class="header-user-initial">
         <div>
           <span>{{ userInitial }}</span>
         </div>
       </div>
     </template>
-    <b-dropdown-item slot="dropdown" @click="$emit('signOut')">Sign Out</b-dropdown-item>
+    <b-dropdown-item slot="dropdown" @click="$emit('signOut')"
+      >Sign Out</b-dropdown-item
+    >
   </AppHeaderDropdown>
 </template>
 

@@ -42,19 +42,20 @@
         </b-container>
       </main>
     </div>
-    <!-- <TheFooter>
+    <TheFooter>
       <div class="ml-auto">
         <span class="mr-1">
           <a href="/#/support">Contact Us</a>
         </span>
       </div>
-    </TheFooter> -->
+    </TheFooter>
   </div>
 </template>
 
 <script>
 import nav from "../Navigation";
 import {
+  Footer as TheFooter,
   Header as AppHeader,
   SidebarToggler,
   Sidebar as AppSidebar,
@@ -79,6 +80,7 @@ export default {
     SidebarHeader,
     SidebarNav,
     SidebarMinimizer,
+    TheFooter,
     HeaderDropdownAccount,
     Login
   },
