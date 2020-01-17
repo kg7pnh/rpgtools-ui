@@ -17,7 +17,7 @@
           <ItemExport :item="item" />
         </b-tab>
         <b-tab v-if="user.is_superuser" title="History">
-          <ItemHistory :history="history" />
+          <ItemHistory :itemHistory="itemHistory" />
         </b-tab>
       </b-tabs>
       <ItemDetail
@@ -57,25 +57,32 @@ export default {
     };
   },
   computed: {
-    history: function() {
-      let changes = [];
-      let data = _.sortBy(
+    itemHistory: function() {
+      let entries = _.sortBy(
         store.state[this.itemHistoryState],
         "history_id",
         "desc"
       );
-      for (let i = 0; i < data.length; i++) {
-        let child = data[i];
-        for (let j = 0; j < child.length; j++) {
-          let changeEntry = child[j];
-          let change = {};
-          change["index"] = j;
-          change["type"] = changeEntry["type"];
-          change["changes"] = changeEntry["changes"];
-          changes.push(change);
+      let index = 0;
+      let data = [];
+      for (index = 0; index < entries.length; index++) {
+        let child_index = 0;
+        for (
+          child_index = 0;
+          child_index < entries[index].length;
+          child_index++
+        ) {
+          let item = {};
+          item["history_id"] = entries[index][child_index]["history_id"];
+          item["history_date_time"] =
+            entries[index][child_index]["history_date_time"];
+          item["history_type"] = entries[index][child_index]["history_type"];
+          item["change_count"] = entries[index][child_index]["change_count"];
+          item["changes"] = entries[index][child_index]["changes"];
+          data.push(item);
         }
       }
-      return changes;
+      return data;
     },
     user: function() {
       return store.state.user;
@@ -100,7 +107,15 @@ export default {
     });
     store.dispatch({
       type: "getItems",
+      itemsPath: "gamesystems"
+    });
+    store.dispatch({
+      type: "getItems",
       itemsPath: "publishers"
+    });
+    store.dispatch({
+      type: "getItems",
+      itemsPath: "schemas"
     });
 
     let item_id_param = this.$route.params.item_id;
@@ -115,7 +130,8 @@ export default {
         this.item_id = item_id_param;
         store
           .dispatch({
-            type: "get" + this.pluralName
+            type: "getItems",
+            itemsPath: this.itemsState
           })
           .then(() => {
             this.item = store.state[this.itemsState].find(d => {
@@ -129,8 +145,10 @@ export default {
               router.push(`/${this.itemsState}`);
             } else {
               store.dispatch({
-                type: "get" + this.singularName + "History",
-                itemId: item_id_param
+                type: "getItemHistory",
+                item: this.item,
+                itemHistoryState: this.itemHistoryState,
+                itemsPath: this.itemsState
               });
             }
           });

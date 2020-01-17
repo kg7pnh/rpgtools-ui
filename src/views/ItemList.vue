@@ -197,9 +197,7 @@ export default {
       this.$store.dispatch({
         type: "deleteItem",
         itemsPath: this.itemsState,
-        itemId: this.selectedItem.id
-        // type: "delete" + this.singularName,
-        // item: this.selectedItem
+        item: this.selectedItem
       });
       this.showDeleteConfirmationModal = false;
       this.selectedItem = {};

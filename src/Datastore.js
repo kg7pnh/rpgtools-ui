@@ -98,6 +98,11 @@ export const store = new Vuex.Store({
       let data = context.data;
       state[itemsType] = data;
     },
+    setItemHistory(state, context) {
+      let itemHistoryState = context.itemHistoryState;
+      let itmeHistory = context.itmeHistory;
+      state[itemHistoryState] = itmeHistory;
+    },
     setBooks(state, books) {
       state.books = books;
     },
@@ -156,9 +161,18 @@ export const store = new Vuex.Store({
   actions: {
     deleteItem({ dispatch, state }, context) {
       if (state.access_token) {
+        let item = context.item;
         let itemsPath = context.itemsPath;
-        let itemId = context.itemId;
-        let endPoint = `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}/delete/${itemId}`;
+        let endPoint = "";
+        if (itemsPath == "schemas") {
+          endPoint = `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}/delete/${
+            item.id
+          }/${item.version}`;
+        } else {
+          endPoint = `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}/delete/${
+            item.id
+          }`;
+        }
         let method = "delete";
         return axios({
           method: method,
@@ -177,156 +191,6 @@ export const store = new Vuex.Store({
             return Promise.resolve(dispatch("handleRequestError", error));
           });
       }
-    },
-    deleteBook({ dispatch, state }, context) {
-      let book = context.item;
-      let endPoint = `${rpgtoolsApiEndpoint}/api/v1/books/delete/${book.id}`;
-      let method = "delete";
-      return axios({
-        method: method,
-        url: endPoint,
-        headers: { Authorization: "Bearer " + state.access_token }
-      })
-        .then(() => {
-          return Promise.resolve(
-            dispatch({
-              type: "getBooks"
-            })
-          );
-        })
-        .catch(error => {
-          return Promise.resolve(dispatch("handleRequestError", error));
-        });
-    },
-    deleteBookFormat({ dispatch, state }, context) {
-      let bookFormat = context.item;
-      let endPoint = `${rpgtoolsApiEndpoint}/api/v1/bookformats/delete/${
-        bookFormat.id
-      }`;
-      let method = "delete";
-      return axios({
-        method: method,
-        url: endPoint,
-        headers: { Authorization: "Bearer " + state.access_token }
-      })
-        .then(() => {
-          return Promise.resolve(
-            dispatch({
-              type: "getBookFormats"
-            })
-          );
-        })
-        .catch(error => {
-          return Promise.resolve(dispatch("handleRequestError", error));
-        });
-    },
-    deleteGame({ dispatch, state }, context) {
-      let game = context.item;
-      let endPoint = `${rpgtoolsApiEndpoint}/api/v1/games/delete/${game.id}`;
-      let method = "delete";
-      return axios({
-        method: method,
-        url: endPoint,
-        headers: { Authorization: "Bearer " + state.access_token }
-      })
-        .then(() => {
-          return Promise.resolve(
-            dispatch({
-              type: "getGames"
-            })
-          );
-        })
-        .catch(error => {
-          return Promise.resolve(dispatch("handleRequestError", error));
-        });
-    },
-    deleteGameSystem({ dispatch, state }, context) {
-      let gameSystem = context.item;
-      let endPoint = `${rpgtoolsApiEndpoint}/api/v1/gamesystems/delete/${
-        gameSystem.id
-      }`;
-      let method = "delete";
-      return axios({
-        method: method,
-        url: endPoint,
-        headers: { Authorization: "Bearer " + state.access_token }
-      })
-        .then(() => {
-          return Promise.resolve(
-            dispatch({
-              type: "getGameSystems"
-            })
-          );
-        })
-        .catch(error => {
-          return Promise.resolve(dispatch("handleRequestError", error));
-        });
-    },
-    deleteOrganization({ dispatch, state }, context) {
-      let organization = context.item;
-      let endPoint = `${rpgtoolsApiEndpoint}/api/v1/organizations/delete/${
-        organization.id
-      }`;
-      let method = "delete";
-      return axios({
-        method: method,
-        url: endPoint,
-        headers: { Authorization: "Bearer " + state.access_token }
-      })
-        .then(() => {
-          return Promise.resolve(
-            dispatch({
-              type: "getOrganizations"
-            })
-          );
-        })
-        .catch(error => {
-          return Promise.resolve(dispatch("handleRequestError", error));
-        });
-    },
-    deletePerson({ dispatch, state }, context) {
-      let person = context.item;
-      let endPoint = `${rpgtoolsApiEndpoint}/api/v1/persons/delete/${
-        person.id
-      }`;
-      let method = "delete";
-      return axios({
-        method: method,
-        url: endPoint,
-        headers: { Authorization: "Bearer " + state.access_token }
-      })
-        .then(() => {
-          return Promise.resolve(
-            dispatch({
-              type: "getPeople"
-            })
-          );
-        })
-        .catch(error => {
-          return Promise.resolve(dispatch("handleRequestError", error));
-        });
-    },
-    deletePublisher({ dispatch, state }, context) {
-      let publisher = context.item;
-      let endPoint = `${rpgtoolsApiEndpoint}/api/v1/publishers/delete/${
-        publisher.id
-      }`;
-      let method = "delete";
-      return axios({
-        method: method,
-        url: endPoint,
-        headers: { Authorization: "Bearer " + state.access_token }
-      })
-        .then(() => {
-          return Promise.resolve(
-            dispatch({
-              type: "getPublishers"
-            })
-          );
-        })
-        .catch(error => {
-          return Promise.resolve(dispatch("handleRequestError", error));
-        });
     },
     getItems({ commit, state, dispatch }, context) {
       if (state.access_token) {
@@ -352,6 +216,36 @@ export const store = new Vuex.Store({
           });
       }
     },
+    getItemHistory({ commit, dispatch }, context) {
+      let item = context.item;
+      let itemsPath = context.itemsPath;
+      let itemHistoryState = context.itemHistoryState;
+      let endPoint = "";
+      if (itemsPath == "schemas") {
+        endPoint = `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}/${item.id}/${
+          item.version
+        }/history`;
+      } else {
+        endPoint = `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}/${
+          item.id
+        }/history`;
+      }
+      return axios
+        .get(endPoint)
+        .then(response => {
+          let itemHistory = response.data;
+          return Promise.resolve(
+            commit({
+              type: "setItemHistory",
+              itmeHistory: itemHistory,
+              itemHistoryState: itemHistoryState
+            })
+          );
+        })
+        .catch(error => {
+          return Promise.resolve(dispatch("handleRequestError", error));
+        });
+    },
     getBookHistory({ commit, dispatch }, context) {
       let bookId = context.itemId;
       let endPoint = `${rpgtoolsApiEndpoint}/api/v1/books/${bookId}/history`;
@@ -359,7 +253,6 @@ export const store = new Vuex.Store({
         .get(endPoint)
         .then(response => {
           let bookHistory = response.data;
-          console.log(response);
           return Promise.resolve(commit("setBookHistory", bookHistory));
         })
         .catch(error => {
@@ -385,51 +278,9 @@ export const store = new Vuex.Store({
         .get(endPoint)
         .then(response => {
           let bookFormatHistory = response.data;
-          console.log(response);
           return Promise.resolve(
             commit("setBookFormatHistory", bookFormatHistory)
           );
-        })
-        .catch(error => {
-          return Promise.resolve(dispatch("handleRequestError", error));
-        });
-    },
-    getBooks({ commit, state, dispatch }) {
-      if (state.access_token) {
-        let endPoint = `${rpgtoolsApiEndpoint}/api/v1/books`;
-        let header = {
-          headers: { Authorization: "Bearer " + state.access_token }
-        };
-        return axios
-          .get(endPoint, header)
-          .then(response => {
-            let books = response.data;
-            return Promise.resolve(commit("setBooks", books));
-          })
-          .catch(error => {
-            return Promise.resolve(dispatch("handleRequestError", error));
-          });
-      }
-    },
-    getContributors({ commit, dispatch }) {
-      let endPoint = `${rpgtoolsApiEndpoint}/api/v1/contributors`;
-      return axios
-        .get(endPoint)
-        .then(response => {
-          let contributors = response.data;
-          return Promise.resolve(commit("setContributors", contributors));
-        })
-        .catch(error => {
-          return Promise.resolve(dispatch("handleRequestError", error));
-        });
-    },
-    getGames({ commit, dispatch }) {
-      let endPoint = `${rpgtoolsApiEndpoint}/api/v1/games`;
-      return axios
-        .get(endPoint)
-        .then(response => {
-          let games = response.data;
-          return Promise.resolve(commit("setGames", games));
         })
         .catch(error => {
           return Promise.resolve(dispatch("handleRequestError", error));
@@ -442,21 +293,7 @@ export const store = new Vuex.Store({
         .get(endPoint)
         .then(response => {
           let gameHistory = response.data;
-          console.log(response);
-          console.log(gameHistory);
           return Promise.resolve(commit("setGameHistory", gameHistory));
-        })
-        .catch(error => {
-          return Promise.resolve(dispatch("handleRequestError", error));
-        });
-    },
-    getGameSystems({ commit, dispatch }) {
-      let endPoint = `${rpgtoolsApiEndpoint}/api/v1/gamesystems`;
-      return axios
-        .get(endPoint)
-        .then(response => {
-          let gameSystems = response.data;
-          return Promise.resolve(commit("setGameSystems", gameSystems));
         })
         .catch(error => {
           return Promise.resolve(dispatch("handleRequestError", error));
@@ -469,7 +306,6 @@ export const store = new Vuex.Store({
         .get(endPoint)
         .then(response => {
           let gameSystemHistory = response.data;
-          console.log(response);
           return Promise.resolve(
             commit("setGameSystemHistory", gameSystemHistory)
           );
@@ -490,18 +326,6 @@ export const store = new Vuex.Store({
           return Promise.resolve(dispatch("handleRequestError", error));
         });
     },
-    getOrganizations({ commit, dispatch }) {
-      let endPoint = `${rpgtoolsApiEndpoint}/api/v1/organizations`;
-      return axios
-        .get(endPoint)
-        .then(response => {
-          let organizations = response.data;
-          return Promise.resolve(commit("setOrganizations", organizations));
-        })
-        .catch(error => {
-          return Promise.resolve(dispatch("handleRequestError", error));
-        });
-    },
     getOrganizationHistory({ commit, dispatch }, context) {
       let organizationHsitoryId = context.itemId;
       let endPoint = `${rpgtoolsApiEndpoint}/api/v1/organizations/${organizationHsitoryId}/history`;
@@ -517,18 +341,6 @@ export const store = new Vuex.Store({
           return Promise.resolve(dispatch("handleRequestError", error));
         });
     },
-    getPeople({ commit, dispatch }) {
-      let endPoint = `${rpgtoolsApiEndpoint}/api/v1/persons`;
-      return axios
-        .get(endPoint)
-        .then(response => {
-          let people = response.data;
-          return Promise.resolve(commit("setPeople", people));
-        })
-        .catch(error => {
-          return Promise.resolve(dispatch("handleRequestError", error));
-        });
-    },
     getPersonHistory({ commit, dispatch }, context) {
       let personId = context.itemId;
       let endPoint = `${rpgtoolsApiEndpoint}/api/v1/persons/${personId}/history`;
@@ -536,20 +348,7 @@ export const store = new Vuex.Store({
         .get(endPoint)
         .then(response => {
           let peronsHistory = response.data;
-          console.log(response);
           return Promise.resolve(commit("setPersonHistory", peronsHistory));
-        })
-        .catch(error => {
-          return Promise.resolve(dispatch("handleRequestError", error));
-        });
-    },
-    getPublishers({ commit, dispatch }) {
-      let endPoint = `${rpgtoolsApiEndpoint}/api/v1/publishers`;
-      return axios
-        .get(endPoint)
-        .then(response => {
-          let publishers = response.data;
-          return Promise.resolve(commit("setPublishers", publishers));
         })
         .catch(error => {
           return Promise.resolve(dispatch("handleRequestError", error));
@@ -562,7 +361,6 @@ export const store = new Vuex.Store({
         .get(endPoint)
         .then(response => {
           let publisherHistory = response.data;
-          console.log(response);
           return Promise.resolve(
             commit("setPublisherHistory", publisherHistory)
           );
@@ -578,20 +376,7 @@ export const store = new Vuex.Store({
         .get(endPoint)
         .then(response => {
           let schemaHistory = response.data;
-          console.log(response);
           return Promise.resolve(commit("setSchemaHistory", schemaHistory));
-        })
-        .catch(error => {
-          return Promise.resolve(dispatch("handleRequestError", error));
-        });
-    },
-    getSchemas({ commit, dispatch }) {
-      let endPoint = `${rpgtoolsApiEndpoint}/api/v1/schemas`;
-      return axios
-        .get(endPoint)
-        .then(response => {
-          let schemas = response.data;
-          return Promise.resolve(commit("setSchemas", schemas));
         })
         .catch(error => {
           return Promise.resolve(dispatch("handleRequestError", error));
@@ -640,160 +425,34 @@ export const store = new Vuex.Store({
           return Promise.resolve(dispatch("handleRequestError", error));
         });
     },
-    putBook({ dispatch, state }, context) {
-      let book = context.item;
-      let endPoint = book.id
-        ? `${rpgtoolsApiEndpoint}/api/v1/books/edit/${book.id}`
-        : `${rpgtoolsApiEndpoint}/api/v1/books/`;
-      let method = book.id ? "put" : "post";
+    putItem({ dispatch, state }, context) {
+      let item = context.item;
+      let itemsPath = context.itemsPath;
+      let endPoint = "";
+
+      if (itemsPath == "schemas") {
+        endPoint = item.id
+          ? `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}/edit/${item.id}/${
+              item.version
+            }`
+          : `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}/`;
+      } else {
+        endPoint = item.id
+          ? `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}/edit/${item.id}`
+          : `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}/`;
+      }
+      let method = item.id ? "put" : "post";
       return axios({
         method: method,
         url: endPoint,
-        data: book,
+        data: item,
         headers: { Authorization: "Bearer " + state.access_token }
       })
         .then(() => {
           return Promise.resolve(
             dispatch({
-              type: "getBooks"
-            })
-          );
-        })
-        .catch(error => {
-          return Promise.resolve(dispatch("handleRequestError", error));
-        });
-    },
-    putBookFormat({ dispatch, state }, context) {
-      let bookFormat = context.item;
-      let endPoint = bookFormat.id
-        ? `${rpgtoolsApiEndpoint}/api/v1/bookformats/edit/${bookFormat.id}`
-        : `${rpgtoolsApiEndpoint}/api/v1/bookformats/`;
-      let method = bookFormat.id ? "put" : "post";
-      return axios({
-        method: method,
-        url: endPoint,
-        data: bookFormat,
-        headers: { Authorization: "Bearer " + state.access_token }
-      })
-        .then(() => {
-          return Promise.resolve(
-            dispatch({
-              type: "getBookFormats"
-            })
-          );
-        })
-        .catch(error => {
-          return Promise.resolve(dispatch("handleRequestError", error));
-        });
-    },
-    putGame({ dispatch, state }, context) {
-      let game = context.item;
-      let endPoint = game.id
-        ? `${rpgtoolsApiEndpoint}/api/v1/games/edit/${game.id}`
-        : `${rpgtoolsApiEndpoint}/api/v1/games/`;
-      let method = game.id ? "put" : "post";
-      return axios({
-        method: method,
-        url: endPoint,
-        data: game,
-        headers: { Authorization: "Bearer " + state.access_token }
-      })
-        .then(() => {
-          return Promise.resolve(
-            dispatch({
-              type: "getGames"
-            })
-          );
-        })
-        .catch(error => {
-          return Promise.resolve(dispatch("handleRequestError", error));
-        });
-    },
-    putGameSystem({ dispatch, state }, context) {
-      let gameSystem = context.item;
-      let endPoint = gameSystem.id
-        ? `${rpgtoolsApiEndpoint}/api/v1/gamesystems/edit/${gameSystem.id}`
-        : `${rpgtoolsApiEndpoint}/api/v1/gamesystems/`;
-      let method = gameSystem.id ? "put" : "post";
-      return axios({
-        method: method,
-        url: endPoint,
-        data: gameSystem,
-        headers: { Authorization: "Bearer " + state.access_token }
-      })
-        .then(() => {
-          return Promise.resolve(
-            dispatch({
-              type: "getGameSystems"
-            })
-          );
-        })
-        .catch(error => {
-          return Promise.resolve(dispatch("handleRequestError", error));
-        });
-    },
-    putOrganization({ dispatch, state }, context) {
-      let organization = context.item;
-      let endPoint = organization.id
-        ? `${rpgtoolsApiEndpoint}/api/v1/organizations/edit/${organization.id}`
-        : `${rpgtoolsApiEndpoint}/api/v1/organizations/`;
-      let method = organization.id ? "put" : "post";
-      return axios({
-        method: method,
-        url: endPoint,
-        data: organization,
-        headers: { Authorization: "Bearer " + state.access_token }
-      })
-        .then(() => {
-          return Promise.resolve(
-            dispatch({
-              type: "getOrganizations"
-            })
-          );
-        })
-        .catch(error => {
-          return Promise.resolve(dispatch("handleRequestError", error));
-        });
-    },
-    putPerson({ dispatch, state }, context) {
-      let person = context.item;
-      let endPoint = person.id
-        ? `${rpgtoolsApiEndpoint}/api/v1/persons/edit/${person.id}`
-        : `${rpgtoolsApiEndpoint}/api/v1/persons/`;
-      let method = person.id ? "put" : "post";
-      return axios({
-        method: method,
-        url: endPoint,
-        data: person,
-        headers: { Authorization: "Bearer " + state.access_token }
-      })
-        .then(() => {
-          return Promise.resolve(
-            dispatch({
-              type: "getPeople"
-            })
-          );
-        })
-        .catch(error => {
-          return Promise.resolve(dispatch("handleRequestError", error));
-        });
-    },
-    putPublisher({ dispatch, state }, context) {
-      let publisher = context.item;
-      let endPoint = publisher.id
-        ? `${rpgtoolsApiEndpoint}/api/v1/publishers/edit/${publisher.id}`
-        : `${rpgtoolsApiEndpoint}/api/v1/publishers/`;
-      let method = publisher.id ? "put" : "post";
-      return axios({
-        method: method,
-        url: endPoint,
-        data: publisher,
-        headers: { Authorization: "Bearer " + state.access_token }
-      })
-        .then(() => {
-          return Promise.resolve(
-            dispatch({
-              type: "getPublishers"
+              type: "getItems",
+              itemsPath: itemsPath
             })
           );
         })

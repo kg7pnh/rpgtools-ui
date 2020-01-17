@@ -4,7 +4,7 @@ import Router from "vue-router";
 // Containers
 const DefaultContainer = () => import("@/containers/DefaultContainer.vue");
 const Home = () => import("@/views/Home.vue");
-const CharacterGeneration = () => import("@/views/CharacterGeneration.vue");
+const Generators = () => import("@/views/Generators.vue");
 const Item = () => import("@/views/Item.vue");
 const ItemDetail = () => import("@/views/ItemDetail.vue");
 const ItemExport = () => import("@/views/ItemExport.vue");
@@ -132,6 +132,20 @@ function generateProps(route) {
       props["pluralName"] = "Schemas";
       props["singularName"] = "Schema";
       break;
+    case "Workflows":
+      props["name"] = name;
+      props["itemsState"] = "workflows";
+      props["pluralName"] = "Workflows";
+      props["singularName"] = "Workflow";
+      break;
+    case "WorkflowDetails":
+      props["name"] = name;
+      props["itemHistoryState"] = "workflowHistory";
+      props["itemId"] = itemId;
+      props["itemsState"] = "workflows";
+      props["pluralName"] = "Workflows";
+      props["singularName"] = "Workflow";
+      break;
   }
   return props;
 }
@@ -145,9 +159,9 @@ let routes = [
     component: DefaultContainer,
     children: [
       {
-        path: "charactergeneration",
-        name: "CharacterGeneration",
-        component: CharacterGeneration
+        path: "generators",
+        name: "Generators",
+        component: Generators
       },
       {
         path: "books",
@@ -382,6 +396,35 @@ let routes = [
           {
             path: "details",
             name: "SchemaHistory",
+            component: ItemHistory
+          }
+        ]
+      },
+      {
+        path: "workflows",
+        name: "Workflows",
+        props: generateProps,
+        component: ItemList
+      },
+      {
+        path: "workflows/:item_id",
+        name: "WorkflowDetails",
+        props: generateProps,
+        component: Item,
+        children: [
+          {
+            path: "details",
+            name: "WorkflowDetail",
+            component: ItemDetail
+          },
+          {
+            path: "details",
+            name: "WorkflowExport",
+            component: ItemExport
+          },
+          {
+            path: "details",
+            name: "WorkflowHistory",
             component: ItemHistory
           }
         ]

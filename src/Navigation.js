@@ -7,8 +7,8 @@ export default {
       adminOnly: false
     },
     {
-      name: "Character Generation",
-      url: "/charactergeneration",
+      name: "Generators",
+      url: "/generators",
       icon: "fa fa-tasks",
       adminOnly: false
     },
@@ -57,6 +57,12 @@ export default {
     {
       name: "Schemas",
       url: "/schemas",
+      icon: "fa fa-file",
+      adminOnly: true
+    },
+    {
+      name: "Workflows",
+      url: "/workflows",
       icon: "fa fa-file",
       adminOnly: true
     }

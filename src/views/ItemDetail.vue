@@ -213,7 +213,8 @@
         </b-collapse>
       </b-card>
 
-      <b-card no-body v-if="this.singularName == 'Book'">
+      <!-- Additional Details -->
+      <b-card no-body v-if="showAdditionalDetails">
         <b-card-header header-tag="header" class="p-1" role="tab">
           <b-button
             block
@@ -231,7 +232,7 @@
           role="tabpanel"
         >
           <b-card-body>
-            <b-input-group>
+            <b-input-group v-if="showGames">
               <label for="item-games">Games</label>
               <v-select
                 class="item-form-input"
@@ -248,8 +249,32 @@
               </v-select>
             </b-input-group>
 
-            <label for="item-publisher">Publisher</label>
-            <b-input-group>
+            <!-- Format Type -->
+            <b-input-group v-if="this.singularName == 'BookFormat'">
+              <label for="item-format-type">Format Type</label>
+              <v-select
+                class="item-form-input"
+                v-model="format_type"
+                :options="formatTypes"
+                :reduce="formatTypes => formatTypes.value"
+                label="text"
+                :multiple="false"
+                :clearable="true"
+                :searchable="true"
+                :filterable="true"
+                :close-on-select="true"
+              >
+              </v-select>
+            </b-input-group>
+
+            <!-- Publisher -->
+            <b-input-group
+              v-if="
+                this.singularName != 'Publisher' &&
+                  this.singularName != 'BookFormat'
+              "
+            >
+              <label for="item-publisher">Publisher</label>
               <v-select
                 class="item-form-input"
                 v-model="publisher"
@@ -265,8 +290,27 @@
               </v-select>
             </b-input-group>
 
-            <label for="item-format">Book format:</label>
-            <b-input-group>
+            <!-- Game System -->
+            <b-input-group v-if="this.singularName == 'Game'">
+              <label for="item-format">Game System:</label>
+              <v-select
+                class="item-form-input"
+                v-model="game_system"
+                :options="gameSystems"
+                :reduce="gameSystems => gameSystems.value"
+                label="text"
+                :multiple="false"
+                :clearable="true"
+                :searchable="true"
+                :filterable="true"
+                :close-on-select="true"
+              >
+              </v-select>
+            </b-input-group>
+
+            <!-- Book Format -->
+            <b-input-group v-if="this.singularName == 'Book'">
+              <label for="item-format">Book Format:</label>
               <v-select
                 class="item-form-input"
                 v-model="book_format"
@@ -282,103 +326,178 @@
               </v-select>
             </b-input-group>
 
-            <label for="item-short-name">Short Name</label>
-            <b-input-group>
-              <b-form-input
-                id="item-short-name"
-                type="text"
-                v-model="short_name"
-                @input="validateItem"
-              />
-            </b-input-group>
-
-            <label for="item-abbreviation">Abbreviation</label>
-            <b-input-group>
-              <b-form-input
-                id="item-abbreviation"
-                type="text"
-                v-model="abbreviation"
-                @input="validateItem"
-              />
-            </b-input-group>
-
-            <label for="item-catalog-number">Catalog Number</label>
-            <b-input-group>
-              <b-form-input
-                id="item-catalog-number"
-                type="text"
-                v-model="catalog_number"
-                @input="validateItem"
-              />
-            </b-input-group>
-
-            <label for="item-publication-year">Publication Year</label>
-            <b-input-group>
-              <b-form-input
-                id="item-publication-year"
-                type="number"
-                v-model="publication_year"
-                @input="validateItem"
-              />
-            </b-input-group>
-
-            <label for="item-pages">Pages</label>
-            <b-input-group>
-              <b-form-input
-                id="item-pages"
-                type="number"
-                v-model="pages"
-                @input="validateItem"
-              />
-            </b-input-group>
-
-            <label for="item-isbn-10">ISBN-10&nbsp;</label>
-            <b-link
-              v-if="isbn_10"
-              :href="`https://isbnsearch.org/isbn/${isbn_10}`"
-              target="_blank"
-              title="ISBN-10 lookup"
+            <!-- Short Name -->
+            <div
+              v-if="
+                this.singularName != 'Publisher' &&
+                  this.singularName != 'BookFormat'
+              "
             >
-              <i class="fa fa-external-link"></i>
-            </b-link>
-            <b-input-group>
-              <b-form-input
-                id="item-isbn-10"
-                type="text"
-                v-model="isbn_10"
-                pattern="^(?:ISBN(?:10)?(?:-10)?\x20)?[0-9]{9}(\d|X)$"
-                @input="validateItem"
-              />
-              <b-form-invalid-feedback id="item-isbn-10-validation"
-                >Enter a valid ISDN-10 value
-              </b-form-invalid-feedback>
-            </b-input-group>
+              <label for="item-short-name">Short Name</label>
+              <b-input-group>
+                <b-form-input
+                  id="item-short-name"
+                  type="text"
+                  v-model="short_name"
+                  @input="validateItem"
+                />
+              </b-input-group>
+            </div>
 
-            <label for="item-isbn-13">ISBN-13&nbsp;</label>
-            <b-link
-              v-if="isbn_13"
-              :href="`https://isbnsearch.org/isbn/${isbn_13}`"
-              target="_blank"
-              title="ISBN-13 lookup"
-            >
-              <i class="fa fa-external-link"></i>
-            </b-link>
-            <b-input-group>
-              <b-form-input
-                id="item-isbn-13"
-                type="text"
-                v-model="isbn_13"
-                pattern="^(?:ISBN(?:13)?(?:-13)?\x20)?:?97(?:8|9)[0-9]{10}$"
-                @input="validateItem"
-              />
-              <b-form-invalid-feedback id="item-isbn-13-validation"
-                >Enter a valid ISDN-13 value
-              </b-form-invalid-feedback>
-            </b-input-group>
+            <!-- Abbreviation -->
+            <div v-if="this.singularName != 'BookFormat'">
+              <label for="item-abbreviation">Abbreviation</label>
+              <b-input-group>
+                <b-form-input
+                  id="item-abbreviation"
+                  type="text"
+                  v-model="abbreviation"
+                  @input="validateItem"
+                />
+              </b-input-group>
+            </div>
+
+            <!-- Book Specific -->
+            <div v-if="this.singularName == 'Book'">
+              <label for="item-catalog-number">Catalog Number</label>
+              <b-input-group>
+                <b-form-input
+                  id="item-catalog-number"
+                  type="text"
+                  v-model="catalog_number"
+                  @input="validateItem"
+                />
+              </b-input-group>
+
+              <label for="item-publication-year">Publication Year</label>
+              <b-input-group>
+                <b-form-input
+                  id="item-publication-year"
+                  type="number"
+                  v-model="publication_year"
+                  @input="validateItem"
+                />
+              </b-input-group>
+
+              <label for="item-pages">Pages</label>
+              <b-input-group>
+                <b-form-input
+                  id="item-pages"
+                  type="number"
+                  v-model="pages"
+                  @input="validateItem"
+                />
+              </b-input-group>
+
+              <label for="item-isbn-10">ISBN-10&nbsp;</label>
+              <b-link
+                v-if="isbn_10"
+                :href="`https://isbnsearch.org/isbn/${isbn_10}`"
+                target="_blank"
+                title="ISBN-10 lookup"
+              >
+                <i class="fa fa-external-link"></i>
+              </b-link>
+              <b-input-group>
+                <b-form-input
+                  id="item-isbn-10"
+                  type="text"
+                  v-model="isbn_10"
+                  pattern="^(?:ISBN(?:10)?(?:-10)?\x20)?[0-9]{9}(\d|X)$"
+                  @input="validateItem"
+                />
+                <b-form-invalid-feedback id="item-isbn-10-validation"
+                  >Enter a valid ISDN-10 value
+                </b-form-invalid-feedback>
+              </b-input-group>
+
+              <label for="item-isbn-13">ISBN-13&nbsp;</label>
+              <b-link
+                v-if="isbn_13"
+                :href="`https://isbnsearch.org/isbn/${isbn_13}`"
+                target="_blank"
+                title="ISBN-13 lookup"
+              >
+                <i class="fa fa-external-link"></i>
+              </b-link>
+              <b-input-group>
+                <b-form-input
+                  id="item-isbn-13"
+                  type="text"
+                  v-model="isbn_13"
+                  pattern="^(?:ISBN(?:13)?(?:-13)?\x20)?:?97(?:8|9)[0-9]{10}$"
+                  @input="validateItem"
+                />
+                <b-form-invalid-feedback id="item-isbn-13-validation"
+                  >Enter a valid ISDN-13 value
+                </b-form-invalid-feedback>
+              </b-input-group>
+            </div>
           </b-card-body>
         </b-collapse>
       </b-card>
 
+      <!-- Schema Details -->
+      <b-card no-body v-if="this.itemsState == 'schemas'">
+        <b-card-header header-tag="header" class="p-1" role="tab">
+          <b-button
+            block
+            href="#"
+            v-b-toggle.schema-details
+            variant="link"
+            size="md"
+            class="text-left"
+            >Schema Details</b-button
+          >
+        </b-card-header>
+        <b-collapse
+          id="schema-details"
+          accordion="schema-details"
+          role="tabpanel"
+        >
+          <b-card-body>
+            <!-- Schema Type -->
+            <b-input-group>
+              <label for="item-format-type">Schema Type</label>
+              <v-select
+                class="item-form-input"
+                v-model="schema_type"
+                :options="schemaTypes"
+                :reduce="schemaTypes => schemaTypes.value"
+                label="text"
+                :multiple="false"
+                :clearable="true"
+                :searchable="true"
+                :filterable="true"
+                :close-on-select="true"
+              >
+              </v-select>
+            </b-input-group>
+            <b-input-group>
+              <b-form-checkbox v-model="enabled" name="enabled" switch>
+                Enabled
+              </b-form-checkbox>
+            </b-input-group>
+            <b-input-group>
+              <b-form-checkbox v-model="deprecated" name="deprecated" switch>
+                Deprecated
+              </b-form-checkbox>
+            </b-input-group>
+            <label for="item-format-type">Schema Definition</label>
+            <div>
+              <v-json-editor
+                deck
+                v-model="schema_document"
+                :show-btns="false"
+                :expandedOnStart="false"
+              >
+              </v-json-editor>
+            </div>
+          </b-card-body>
+        </b-collapse>
+      </b-card>
+
+      <!-- Contributors -->
       <b-card no-body v-if="showContributorFields">
         <b-card-header header-tag="header" class="p-1" role="tab">
           <b-button
@@ -813,8 +932,10 @@ import $ from "jquery";
 import naturalCompare from "natural-compare";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
+import vueJsonEditor from "vue-json-editor";
 
 Vue.component("v-select", vSelect);
+Vue.component("v-json-editor", vueJsonEditor);
 
 let marked = require("marked");
 
@@ -840,8 +961,21 @@ export default {
         })
         .sort((a, b) => naturalCompare(a.name, b.name));
     },
+    formatTypes: function() {
+      return [
+        { text: "Digital", value: "Digital" },
+        { text: "Physical", value: "Physical" }
+      ];
+    },
     games: function() {
       return store.state.games
+        .map(d => {
+          return { text: d.name, value: d._id };
+        })
+        .sort((a, b) => naturalCompare(a.name, b.name));
+    },
+    gameSystems: function() {
+      return store.state.gamesystems
         .map(d => {
           return { text: d.name, value: d._id };
         })
@@ -859,6 +993,14 @@ export default {
         })
         .sort((a, b) => naturalCompare(a.name, b.name));
     },
+    schemaTypes: function() {
+      return [
+        { text: "Form", value: "Form" },
+        { text: "Object", value: "Object" },
+        { text: "Input", value: "Input" },
+        { text: "Output", value: "Output" }
+      ];
+    },
     showContributorFields: function() {
       let result = false;
       if (this.singularName == "Book") {
@@ -866,8 +1008,45 @@ export default {
       }
       return result;
     },
+    showAdditionalDetails: function() {
+      let result = false;
+      if (
+        this.singularName == "Book" ||
+        this.singularName == "BookFormat" ||
+        this.singularName == "Game" ||
+        this.singularName == "GameSystem" ||
+        this.singularName == "Publisher"
+      ) {
+        result = true;
+      }
+      return result;
+    },
+    showGames: function() {
+      let result = false;
+      if (
+        this.singularName == "Book" ||
+        this.singularName == "Schema" ||
+        this.singularName == "Workflow"
+      ) {
+        result = true;
+      }
+      return result;
+    },
     user: function() {
       return store.state.user;
+    },
+    workflowMethods: function() {
+      return [
+        { text: "MANUAL", value: "MANUAL" },
+        { text: "AUTO", value: "AUTO" }
+      ];
+    },
+    workflowTypes: function() {
+      return [
+        { text: "CHARACHTER", value: "CHARACHTER" },
+        { text: "NPC", value: "NPC" },
+        { text: "OTHER", value: "OTHER" }
+      ];
     }
   },
   data() {
@@ -881,11 +1060,16 @@ export default {
       book_format: null,
       itemValid: false,
       catalog_number: "",
+      deprecated: false,
       description: "",
       designer: [],
       developer: [],
       editor: [],
+      enabled: true,
+      form_schema: null,
+      format_type: "",
       game: [],
+      game_system: null,
       graphic_designer: [],
       isbn_10: "",
       isbn_13: "",
@@ -905,6 +1089,9 @@ export default {
       publisher: null,
       read_me: "",
       research_assistant: [],
+      schema_document: {},
+      schema_type: "",
+      schema_version: null,
       selected: [],
       short_name: "",
       text_manager: [],
@@ -926,8 +1113,44 @@ export default {
       vm.read_me = item.read_me;
       vm.url = item.url;
 
-      if (this.singularName == "Book") {
+      if (this.itemsState == "bookformats") {
+        vm.format_type = item.format_type;
+      }
+
+      if (this.itemsState == "games") {
+        vm.game_system = item.game_system;
+      }
+
+      if (this.itemsState == "schemas") {
+        vm.deprecated = item.deprecated;
+        vm.enabled = item.enabled;
+        vm.form_schema = item.form_schema;
+        vm.schema_type = item.schema_type;
+        vm.schema_document = item.document;
+        vm.schema_version = item.version;
+        vm.schema_specification = item.specification;
+        vm.form_schema = item.form_schema;
+      }
+
+      if (
+        this.itemsState == "books" ||
+        this.itemsState == "games" ||
+        this.itemsState == "publishers" ||
+        this.itemsState == "gamesystems"
+      ) {
         vm.abbreviation = item.abbreviation;
+      }
+
+      if (
+        this.itemsState == "books" ||
+        this.itemsState == "games" ||
+        this.itemsState == "gamesystems"
+      ) {
+        vm.publisher = item.publisher;
+        vm.short_name = item.short_name;
+      }
+
+      if (this.itemsState == "books") {
         vm.art_assistant = item.art_assistant;
         vm.art_director = item.art_director;
         vm.artist_cover = item.artist_cover;
@@ -946,15 +1169,13 @@ export default {
         vm.play_tester = item.play_tester;
         vm.proofreader = item.proofreader;
         vm.publication_year = item.publication_year;
-        vm.publisher = item.publisher;
         vm.research_assistant = item.research_assistant;
-        vm.short_name = item.short_name;
         vm.text_manager = item.text_manager;
         vm.text_processor = item.text_processor;
         vm.type_setter = item.type_setter;
       }
 
-      if (this.singularName == "Person") {
+      if (this.itemsState == "persons") {
         vm.name_first = item.name_first;
         vm.name_middle = item.name_middle;
         vm.name_last = item.name_last;
@@ -978,8 +1199,51 @@ export default {
       item["read_me"] = this.read_me;
       item["url"] = this.url;
 
-      if (this.itemsState == "books") {
+      if (this.itemsState == "bookformats") {
+        item["format_type"] = this.format_type;
+      }
+
+      if (
+        this.itemsState == "actions" ||
+        this.itemsState == "books" ||
+        this.itemsState == "workflows"
+      ) {
+        item["game"] = this.game;
+      }
+
+      if (this.itemsState == "games") {
+        item["game_system"] = this.game_system;
+      }
+
+      if (
+        this.itemsState == "books" ||
+        this.itemsState == "games" ||
+        this.itemsState == "gamesystems" ||
+        this.itemsState == "publishers"
+      ) {
         item["abbreviation"] = this.abbreviation;
+      }
+
+      if (
+        this.itemsState == "books" ||
+        this.itemsState == "games" ||
+        this.itemsState == "gamesystems"
+      ) {
+        item["publisher"] = this.publisher;
+        item["short_name"] = this.short_name;
+      }
+
+      if (this.itemsState == "schemas") {
+        item["deprecated"] = this.deprecated;
+        item["document"] = this.schema_document;
+        item["enabled"] = this.enabled;
+        item["form_schema"] = this.form_schema;
+        item["schema_type"] = this.schema_type;
+        item["specification"] = this.schema_specification;
+        item["version"] = this.schema_version;
+      }
+
+      if (this.itemsState == "books") {
         item["art_assistant"] = this.art_assistant;
         item["art_director"] = this.art_director;
         item["art_director"] = this.art_director;
@@ -991,7 +1255,6 @@ export default {
         item["designer"] = this.designer;
         item["developer"] = this.developer;
         item["editor"] = this.editor;
-        item["game"] = this.game;
         item["graphic_designer"] = this.graphic_designer;
         item["isbn_10"] = this.isbn_10;
         item["isbn_13"] = this.isbn_13;
@@ -999,15 +1262,13 @@ export default {
         item["play_tester"] = this.play_tester;
         item["publication_year"] = this.publication_year;
         item["proofreader"] = this.proofreader;
-        item["publisher"] = this.publisher;
         item["research_assistant"] = this.research_assistant;
-        item["short_name"] = this.short_name;
         item["text_manager"] = this.text_manager;
         item["text_processor"] = this.text_processor;
         item["type_setter"] = this.type_setter;
       }
 
-      if (this.singularName == "Person") {
+      if (this.itemsState == "persons") {
         item["name_first"] = this.name_first;
         item["name_middle"] = this.name_middle;
         item["name_last"] = this.name_last;
@@ -1015,12 +1276,12 @@ export default {
         item["name_suffix"] = this.name_suffix;
       }
 
-      this.$store
-        .dispatch({
-          type: "put" + this.singularName,
-          item: item
-        })
-        .then(router.push(`/${this.itemsState}`));
+      this.$store.dispatch({
+        type: "putItem",
+        itemsPath: this.itemsState,
+        item: item
+      });
+      router.push(`/${this.itemsState}`);
     },
     updateMarkdown: _.debounce(function(e) {
       this.markdownInput = e;
