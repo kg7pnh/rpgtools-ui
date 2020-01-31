@@ -8,56 +8,89 @@
           <h3 v-if="item.title">{{ item.title }}</h3>
           <template v-for="row in item.rows">
             <b-row v-bind:key="row.id">
-              <template v-for="col in row.cols">
-                <b-col v-bind:key="col.id" :id="col.id + '-col'" :sm="col.size">
-                  <label v-if="col.type == 'label'" :id="col.id">{{
-                    col.attrs.value
-                  }}</label>
-                  <b-input
-                    v-if="
-                      col.type == 'text' ||
-                        col.type == 'number' ||
-                        col.type == 'email' ||
-                        col.type == 'password' ||
-                        col.type == 'search' ||
-                        col.type == 'url' ||
-                        col.type == 'tel' ||
-                        col.type == 'date' ||
-                        col.type == 'time' ||
-                        col.type == 'range' ||
-                        col.type == 'color'
-                    "
-                    :id="col.id"
-                    :type="col.type"
-                    :placeholder="col.attrs.placeholder"
-                    :readonly="col.attrs.readonly"
-                  >
-                  </b-input>
-                  <b-select
-                    v-if="col.type == 'select'"
-                    :id="col.id"
-                    :options="col.attrs.options"
-                    :selected="col.attrs.selected"
-                  >
-                  </b-select>
+              <template v-for="column in row.columns">
+                <b-col
+                  v-bind:key="column.id"
+                  :id="column.id + '-col'"
+                  :sm="column.size"
+                >
+                  <div class="cell">
+                    <label v-if="column.type == 'label'" :id="column.id">{{
+                      column.attributes.value
+                    }}</label>
+                    <b-input
+                      v-if="
+                        column.type == 'text' ||
+                          column.type == 'number' ||
+                          column.type == 'email' ||
+                          column.type == 'password' ||
+                          column.type == 'search' ||
+                          column.type == 'url' ||
+                          column.type == 'tel' ||
+                          column.type == 'date' ||
+                          column.type == 'time' ||
+                          column.type == 'range' ||
+                          column.type == 'color'
+                      "
+                      :id="column.id"
+                      :type="column.type"
+                      :placeholder="column.attributes.placeholder"
+                      :readonly="column.attributes.readonly"
+                      :required="column.attributes.required"
+                      trim
+                      v-model="generatedData[column.attributes.model]"
+                    >
+                    </b-input>
+                    <b-select
+                      v-if="column.type == 'select'"
+                      :id="column.id"
+                      :options="column.attributes.options"
+                      :selected="column.attributes.selected"
+                      noWheel="true"
+                      v-model="generatedData[column.attributes.model]"
+                    >
+                    </b-select>
+                  </div>
                 </b-col>
               </template>
             </b-row>
           </template>
           <hr />
-          <div>
-            <b-row>
-              <b-col lg="*" class="pb-2">
-                <b-button variant="outline-primary" @click.prevent="prev()">
-                  Previous</b-button
-                >
-              </b-col>
-              <b-col lg="*" class="pb-2">
-                <b-button variant="outline-primary" @click.prevent="next()"
-                  >Next
-                </b-button>
-              </b-col>
-            </b-row>
+          <!-- <div class="btn-group special" role="group"> -->
+          <div class="button-container">
+            <b-button
+              class="button"
+              size="sm"
+              variant="outline-primary"
+              v-if="step > 1"
+              @click.prevent="prev()"
+            >
+              &lsaquo; Previous
+            </b-button>
+            <b-button
+              class="button"
+              size="sm"
+              variant="info"
+              v-if="item.generator"
+              @click.prevent="generateData(item['generator'])"
+              >Generate Data
+            </b-button>
+            <b-button
+              class="button"
+              size="sm"
+              variant="outline-primary"
+              v-if="step < stepCount && stepCount > 1"
+              @click.prevent="next()"
+              >Next &rsaquo;
+            </b-button>
+            <b-button
+              class="button"
+              size="sm"
+              variant="success"
+              v-if="step == stepCount"
+              @click.prevent="submit()"
+              >Submit
+            </b-button>
           </div>
         </div>
       </template>
@@ -69,10 +102,18 @@
 export default {
   props: ["schema"],
   data: () => ({
-    step: 1
+    generatedData: null,
+    step: 1,
+    stepCount: 1
   }),
-  created() {},
+  created() {
+    this.stepCount = this.schema.steps.length;
+    this.generatedData = this.schema.generated_data;
+  },
   methods: {
+    generateData(action_input) {
+      console.log(action_input);
+    },
     prev() {
       this.step--;
     },
@@ -81,8 +122,50 @@ export default {
     },
     reset() {
       this.$refs.formSchema.form().reset();
+    },
+    submit() {
+      alert("Submit");
     }
   }
-  // props: ["schema", ]
 };
 </script>
+
+<style scoped>
+/* .btn-group.special {
+  display: flex;
+} */
+.button {
+  margin: 5px;
+  text-align: center;
+}
+.button-container {
+  align-items: center;
+  justify-content: center;
+}
+div.cell {
+  margin-bottom: 5px;
+}
+html:not([dir="rtl"]) input[type="number"] {
+  text-align: right;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+/* input[type="number"]:hover,
+input[type="number"]:focus {
+  -moz-appearance: number-input;
+} */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"]::-webkit-textfield-decoration-container {
+  border: 1px #ccc solid;
+  background: #efefef;
+}
+label {
+  font-weight: bold;
+  vertical-align: middle;
+}
+</style>

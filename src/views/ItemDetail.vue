@@ -236,11 +236,28 @@
               <label for="item-games">Games</label>
               <v-select
                 class="item-form-input"
-                v-model="game"
-                :options="games"
-                :reduce="games => games.value"
+                v-model="games"
+                :options="gameOptions"
+                :reduce="gameOptions => gameOptions.value"
                 label="text"
                 :multiple="true"
+                :clearable="true"
+                :searchable="true"
+                :filterable="true"
+                :close-on-select="true"
+              >
+              </v-select>
+            </b-input-group>
+
+            <b-input-group v-if="showGame">
+              <label for="item-games">Game</label>
+              <v-select
+                class="item-form-input"
+                v-model="game"
+                :options="gameOptions"
+                :reduce="gameOptions => gameOptions.value"
+                label="text"
+                :multiple="false"
                 :clearable="true"
                 :searchable="true"
                 :filterable="true"
@@ -271,7 +288,8 @@
             <b-input-group
               v-if="
                 this.singularName != 'Publisher' &&
-                  this.singularName != 'BookFormat'
+                  this.singularName != 'BookFormat' &&
+                  this.singularName != 'Workflow'
               "
             >
               <label for="item-publisher">Publisher</label>
@@ -330,7 +348,8 @@
             <div
               v-if="
                 this.singularName != 'Publisher' &&
-                  this.singularName != 'BookFormat'
+                  this.singularName != 'BookFormat' &&
+                  this.singularName != 'Workflow'
               "
             >
               <label for="item-short-name">Short Name</label>
@@ -345,7 +364,12 @@
             </div>
 
             <!-- Abbreviation -->
-            <div v-if="this.singularName != 'BookFormat'">
+            <div
+              v-if="
+                this.singularName != 'BookFormat' &&
+                  this.singularName != 'Workflow'
+              "
+            >
               <label for="item-abbreviation">Abbreviation</label>
               <b-input-group>
                 <b-form-input
@@ -492,6 +516,75 @@
                 :expandedOnStart="false"
               >
               </v-json-editor>
+            </div>
+          </b-card-body>
+        </b-collapse>
+      </b-card>
+
+      <!-- Workflow Details -->
+      <b-card no-body v-if="this.itemsState == 'workflows'">
+        <b-card-header header-tag="header" class="p-1" role="tab">
+          <b-button
+            block
+            href="#"
+            v-b-toggle.schema-details
+            variant="link"
+            size="md"
+            class="text-left"
+            >Wofkflow Details</b-button
+          >
+        </b-card-header>
+        <b-collapse
+          id="schema-details"
+          accordion="schema-details"
+          role="tabpanel"
+        >
+          <b-card-body>
+            <!-- Workflow Method -->
+            <b-input-group>
+              <label for="item-format-type">Workflow Method</label>
+              <v-select
+                class="item-form-input"
+                v-model="workflow_method"
+                :options="workflowMethods"
+                :reduce="workflowMethods => workflowMethods.value"
+                label="text"
+                :multiple="false"
+                :clearable="true"
+                :searchable="true"
+                :filterable="true"
+                :close-on-select="true"
+              >
+              </v-select>
+            </b-input-group>
+            <b-input-group>
+              <b-form-checkbox v-model="enabled" name="enabled" switch>
+                Enabled
+              </b-form-checkbox>
+            </b-input-group>
+            <b-input-group>
+              <b-form-checkbox v-model="deprecated" name="deprecated" switch>
+                Deprecated
+              </b-form-checkbox>
+            </b-input-group>
+            <label>Workflow Definition</label>
+            <div>
+              <v-json-editor
+                deck
+                v-model="workflow_definition"
+                :show-btns="true"
+                :expandedOnStart="false"
+                @has-error="this.validJson = false"
+                @input="updatePreview"
+              >
+              </v-json-editor>
+              <div v-if="this.workflow_definition">
+                <label>Workflow Preview</label>
+                <dynamic-form
+                  :schema="workflow_definition"
+                  :key="schemaState"
+                ></dynamic-form>
+              </div>
             </div>
           </b-card-body>
         </b-collapse>
@@ -933,9 +1026,11 @@ import naturalCompare from "natural-compare";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import vueJsonEditor from "vue-json-editor";
+import DynamicForm from "./components/DynamicForm";
 
 Vue.component("v-select", vSelect);
 Vue.component("v-json-editor", vueJsonEditor);
+Vue.component("dynamic-form", DynamicForm);
 
 let marked = require("marked");
 
@@ -967,7 +1062,7 @@ export default {
         { text: "Physical", value: "Physical" }
       ];
     },
-    games: function() {
+    gameOptions: function() {
       return store.state.games
         .map(d => {
           return { text: d.name, value: d._id };
@@ -996,9 +1091,10 @@ export default {
     schemaTypes: function() {
       return [
         { text: "Form", value: "Form" },
-        { text: "Object", value: "Object" },
         { text: "Input", value: "Input" },
-        { text: "Output", value: "Output" }
+        { text: "Object", value: "Object" },
+        { text: "Output", value: "Output" },
+        { text: "Workflow", value: "Workflow" }
       ];
     },
     showContributorFields: function() {
@@ -1015,19 +1111,23 @@ export default {
         this.singularName == "BookFormat" ||
         this.singularName == "Game" ||
         this.singularName == "GameSystem" ||
-        this.singularName == "Publisher"
+        this.singularName == "Publisher" ||
+        this.singularName == "Workflow"
       ) {
+        result = true;
+      }
+      return result;
+    },
+    showGame: function() {
+      let result = false;
+      if (this.singularName == "Workflow") {
         result = true;
       }
       return result;
     },
     showGames: function() {
       let result = false;
-      if (
-        this.singularName == "Book" ||
-        this.singularName == "Schema" ||
-        this.singularName == "Workflow"
-      ) {
+      if (this.singularName == "Book" || this.singularName == "Schema") {
         result = true;
       }
       return result;
@@ -1037,8 +1137,8 @@ export default {
     },
     workflowMethods: function() {
       return [
-        { text: "MANUAL", value: "MANUAL" },
-        { text: "AUTO", value: "AUTO" }
+        { text: "Manual", value: "Manual" },
+        { text: "Automatic", value: "Automatic" }
       ];
     },
     workflowTypes: function() {
@@ -1068,7 +1168,8 @@ export default {
       enabled: true,
       form_schema: null,
       format_type: "",
-      game: [],
+      game: "",
+      games: [],
       game_system: null,
       graphic_designer: [],
       isbn_10: "",
@@ -1090,6 +1191,7 @@ export default {
       read_me: "",
       research_assistant: [],
       schema_document: {},
+      schemaState: 0,
       schema_type: "",
       schema_version: null,
       selected: [],
@@ -1097,7 +1199,10 @@ export default {
       text_manager: [],
       text_processor: [],
       type_setter: [],
-      url: ""
+      url: "",
+      validJson: true,
+      workflow_definition: null,
+      workflow_method: "Manual"
     };
   },
   methods: {
@@ -1181,6 +1286,14 @@ export default {
         vm.name_last = item.name_last;
         vm.name_prefix = item.name_prefix;
         vm.name_suffix = item.name_suffix;
+      }
+
+      if (this.itemsState == "workflows") {
+        vm.deprecated = item.deprecated;
+        vm.enabled = item.enabled;
+        vm.game = item.game;
+        vm.workflow_definition = item.definition;
+        vm.workflow_method = item.workflow_method;
       }
 
       vm.item = item;
@@ -1276,6 +1389,14 @@ export default {
         item["name_suffix"] = this.name_suffix;
       }
 
+      if (this.itemsState == "workflows") {
+        item["deprecated"] = this.deprecated;
+        item["enabled"] = this.enabled;
+        item["game"] = this.game;
+        item["definition"] = this.workflow_definition;
+        item["workflow_method"] = this.workflow_method;
+      }
+
       this.$store.dispatch({
         type: "putItem",
         itemsPath: this.itemsState,
@@ -1286,6 +1407,9 @@ export default {
     updateMarkdown: _.debounce(function(e) {
       this.markdownInput = e;
     }, 300),
+    updatePreview() {
+      this.schemaState += 1;
+    },
     validateItem() {
       this.isbn10Valid = true;
       this.isbn13Valid = true;
