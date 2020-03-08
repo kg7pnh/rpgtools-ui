@@ -16,6 +16,9 @@ export const store = new Vuex.Store({
     user: {},
     error: "",
 
+    // ActionResult state
+    actionResults: {},
+
     // Book state
     book: {},
     bookHistory: [],
@@ -40,8 +43,6 @@ export const store = new Vuex.Store({
     gamesystems: [],
 
     // Person state
-    people: [], // TODO: replace with persons: []
-
     person: {},
     personHistory: [],
     persons: [],
@@ -55,11 +56,6 @@ export const store = new Vuex.Store({
     publisher: {},
     publisherHistory: [],
     publishers: [],
-
-    // Schema state
-    schema: {},
-    schemaHistory: [],
-    schemas: [],
 
     // Workflow state
     workflow: {},
@@ -93,6 +89,11 @@ export const store = new Vuex.Store({
     setError(state, error) {
       state.error = error;
     },
+    setActionResults(state, context) {
+      let actionResults = context.actionResults;
+      state.actionResults = actionResults;
+      console.log(JSON.stringify(state.actionResults));
+    },
     setItems(state, context) {
       let itemsType = context.itemsType;
       let data = context.data;
@@ -110,15 +111,9 @@ export const store = new Vuex.Store({
         let item = context.item;
         let itemsPath = context.itemsPath;
         let endPoint = "";
-        if (itemsPath == "schemas") {
-          endPoint = `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}/delete/${
-            item.id
-          }/${item.version}`;
-        } else {
-          endPoint = `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}/delete/${
-            item.id
-          }`;
-        }
+        endPoint = `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}/delete/${
+          item.id
+        }`;
         let method = "delete";
         return axios({
           method: method,
@@ -167,15 +162,9 @@ export const store = new Vuex.Store({
       let itemsPath = context.itemsPath;
       let itemHistoryState = context.itemHistoryState;
       let endPoint = "";
-      if (itemsPath == "schemas") {
-        endPoint = `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}/${item.id}/${
-          item.version
-        }/history`;
-      } else {
-        endPoint = `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}/${
-          item.id
-        }/history`;
-      }
+      endPoint = `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}/${
+        item.id
+      }/history`;
       return axios
         .get(endPoint)
         .then(response => {
@@ -239,18 +228,9 @@ export const store = new Vuex.Store({
       let item = context.item;
       let itemsPath = context.itemsPath;
       let endPoint = "";
-
-      if (itemsPath == "schemas") {
-        endPoint = item.id
-          ? `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}/edit/${item.id}/${
-              item.version
-            }`
-          : `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}/`;
-      } else {
-        endPoint = item.id
-          ? `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}/edit/${item.id}`
-          : `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}/`;
-      }
+      endPoint = item.id
+        ? `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}/edit/${item.id}`
+        : `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}/`;
       let method = item.id ? "put" : "post";
       return axios({
         method: method,
@@ -263,6 +243,27 @@ export const store = new Vuex.Store({
             dispatch({
               type: "getItems",
               itemsPath: itemsPath
+            })
+          );
+        })
+        .catch(error => {
+          return Promise.resolve(dispatch("handleRequestError", error));
+        });
+    },
+    runAction({ commit, dispatch }, context) {
+      let endPoint = `${rpgtoolsApiEndpoint}/api/v1/action-runner`;
+      return axios({
+        url: endPoint,
+        method: "post",
+        data: context.input,
+        headers: { "content-type": "application/json" }
+      })
+        .then(response => {
+          let actionResults = response.data;
+          return Promise.resolve(
+            commit({
+              type: "setActionResults",
+              actionResults: actionResults
             })
           );
         })

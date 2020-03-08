@@ -461,73 +461,13 @@
         </b-collapse>
       </b-card>
 
-      <!-- Schema Details -->
-      <b-card no-body v-if="this.itemsState == 'schemas'">
-        <b-card-header header-tag="header" class="p-1" role="tab">
-          <b-button
-            block
-            href="#"
-            v-b-toggle.schema-details
-            variant="link"
-            size="md"
-            class="text-left"
-            >Schema Details</b-button
-          >
-        </b-card-header>
-        <b-collapse
-          id="schema-details"
-          accordion="schema-details"
-          role="tabpanel"
-        >
-          <b-card-body>
-            <!-- Schema Type -->
-            <b-input-group>
-              <label for="item-format-type">Schema Type</label>
-              <v-select
-                class="item-form-input"
-                v-model="schema_type"
-                :options="schemaTypes"
-                :reduce="schemaTypes => schemaTypes.value"
-                label="text"
-                :multiple="false"
-                :clearable="true"
-                :searchable="true"
-                :filterable="true"
-                :close-on-select="true"
-              >
-              </v-select>
-            </b-input-group>
-            <b-input-group>
-              <b-form-checkbox v-model="enabled" name="enabled" switch>
-                Enabled
-              </b-form-checkbox>
-            </b-input-group>
-            <b-input-group>
-              <b-form-checkbox v-model="deprecated" name="deprecated" switch>
-                Deprecated
-              </b-form-checkbox>
-            </b-input-group>
-            <label for="item-format-type">Schema Definition</label>
-            <div>
-              <v-json-editor
-                deck
-                v-model="schema_document"
-                :show-btns="false"
-                :expandedOnStart="false"
-              >
-              </v-json-editor>
-            </div>
-          </b-card-body>
-        </b-collapse>
-      </b-card>
-
       <!-- Workflow Details -->
       <b-card no-body v-if="this.itemsState == 'workflows'">
         <b-card-header header-tag="header" class="p-1" role="tab">
           <b-button
             block
             href="#"
-            v-b-toggle.schema-details
+            v-b-toggle.workflow-details
             variant="link"
             size="md"
             class="text-left"
@@ -535,8 +475,8 @@
           >
         </b-card-header>
         <b-collapse
-          id="schema-details"
-          accordion="schema-details"
+          id="workflow-details"
+          accordion="workflow-details"
           role="tabpanel"
         >
           <b-card-body>
@@ -572,17 +512,17 @@
               <v-json-editor
                 deck
                 v-model="workflow_definition"
-                :show-btns="true"
+                :show-btns="false"
                 :expandedOnStart="false"
-                @has-error="this.validJson = false"
+                @has-error="validJson = false"
                 @input="updatePreview"
               >
               </v-json-editor>
-              <div v-if="this.workflow_definition">
+              <div v-if="this.preview_definition">
                 <label>Workflow Preview</label>
                 <dynamic-form
-                  :schema="workflow_definition"
-                  :key="schemaState"
+                  :definition="preview_definition"
+                  :key="definitionState"
                 ></dynamic-form>
               </div>
             </div>
@@ -1088,15 +1028,6 @@ export default {
         })
         .sort((a, b) => naturalCompare(a.name, b.name));
     },
-    schemaTypes: function() {
-      return [
-        { text: "Form", value: "Form" },
-        { text: "Input", value: "Input" },
-        { text: "Object", value: "Object" },
-        { text: "Output", value: "Output" },
-        { text: "Workflow", value: "Workflow" }
-      ];
-    },
     showContributorFields: function() {
       let result = false;
       if (this.singularName == "Book") {
@@ -1166,7 +1097,6 @@ export default {
       developer: [],
       editor: [],
       enabled: true,
-      form_schema: null,
       format_type: "",
       game: "",
       games: [],
@@ -1190,10 +1120,7 @@ export default {
       publisher: null,
       read_me: "",
       research_assistant: [],
-      schema_document: {},
-      schemaState: 0,
-      schema_type: "",
-      schema_version: null,
+      definitionState: 0,
       selected: [],
       short_name: "",
       text_manager: [],
@@ -1202,6 +1129,7 @@ export default {
       url: "",
       validJson: true,
       workflow_definition: null,
+      preview_definition: null,
       workflow_method: "Manual"
     };
   },
@@ -1224,17 +1152,6 @@ export default {
 
       if (this.itemsState == "games") {
         vm.game_system = item.game_system;
-      }
-
-      if (this.itemsState == "schemas") {
-        vm.deprecated = item.deprecated;
-        vm.enabled = item.enabled;
-        vm.form_schema = item.form_schema;
-        vm.schema_type = item.schema_type;
-        vm.schema_document = item.document;
-        vm.schema_version = item.version;
-        vm.schema_specification = item.specification;
-        vm.form_schema = item.form_schema;
       }
 
       if (
@@ -1292,7 +1209,8 @@ export default {
         vm.deprecated = item.deprecated;
         vm.enabled = item.enabled;
         vm.game = item.game;
-        vm.workflow_definition = item.definition;
+        vm.workflow_definition = eval("(" + item.definition + ")");
+        vm.preview_definition = eval("(" + item.definition + ")");
         vm.workflow_method = item.workflow_method;
       }
 
@@ -1346,16 +1264,6 @@ export default {
         item["short_name"] = this.short_name;
       }
 
-      if (this.itemsState == "schemas") {
-        item["deprecated"] = this.deprecated;
-        item["document"] = this.schema_document;
-        item["enabled"] = this.enabled;
-        item["form_schema"] = this.form_schema;
-        item["schema_type"] = this.schema_type;
-        item["specification"] = this.schema_specification;
-        item["version"] = this.schema_version;
-      }
-
       if (this.itemsState == "books") {
         item["art_assistant"] = this.art_assistant;
         item["art_director"] = this.art_director;
@@ -1393,7 +1301,7 @@ export default {
         item["deprecated"] = this.deprecated;
         item["enabled"] = this.enabled;
         item["game"] = this.game;
-        item["definition"] = this.workflow_definition;
+        item["definition"] = JSON.stringify(this.workflow_definition);
         item["workflow_method"] = this.workflow_method;
       }
 
@@ -1408,7 +1316,10 @@ export default {
       this.markdownInput = e;
     }, 300),
     updatePreview() {
-      this.schemaState += 1;
+      this.preview_definition = JSON.parse(
+        JSON.stringify(this.workflow_definition)
+      );
+      this.definitionState += 1;
     },
     validateItem() {
       this.isbn10Valid = true;

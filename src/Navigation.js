@@ -55,12 +55,6 @@ export default {
       adminOnly: true
     },
     {
-      name: "Schemas",
-      url: "/schemas",
-      icon: "fa fa-file",
-      adminOnly: true
-    },
-    {
       name: "Workflows",
       url: "/workflows",
       icon: "fa fa-file",

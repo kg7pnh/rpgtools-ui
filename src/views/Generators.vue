@@ -33,8 +33,8 @@
     </b-card>
     <dynamic-form
       v-if="showWorkflowForm"
-      :schema="schema"
-      :key="schemaState"
+      :definition="definition"
+      :key="definitionState"
     ></dynamic-form>
   </div>
 </template>
@@ -76,8 +76,8 @@ export default {
       seletedWorkflowId: null,
       showWorkflowForm: false,
       showWorflowSelection: false,
-      schema: null,
-      schemaState: 0
+      definition: null,
+      definitionState: 0
     };
   },
   mounted() {
@@ -113,14 +113,14 @@ export default {
       }
     },
     seletedWorkflowId: function() {
-      this.schema = {};
+      this.definition = {};
       this.gameWorkflow = null;
       if (this.seletedWorkflowId) {
         for (let i = 0; i < this.workflows.length; i++) {
           if (this.workflows[i]["_id"] == this.seletedWorkflowId) {
             this.gameWorkflow = this.workflows[i];
-            this.schema = this.workflows[i].definition;
-            this.schemaState += 1;
+            this.definition = eval("(" + this.workflows[i].definition + ")");
+            this.definitionState += 1;
             this.showWorkflowForm = true;
           }
         }
