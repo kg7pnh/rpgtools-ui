@@ -1,0 +1,1023 @@
+{
+  "rows": [
+    {
+      "id": "personal-details",
+      "columns": [
+        {
+          "id": "personal-details-header",
+          "size": "12",
+          "type": "h3",
+          "attributes": {
+            "value": "Personal Details"
+          }
+        }
+      ]
+    },
+    {
+      "id": "name",
+      "columns": [
+        {
+          "id": "name-label",
+          "size": "2",
+          "type": "label",
+          "attributes": {
+            "value": "Name:"
+          }
+        },
+        {
+          "id": "name-value",
+          "size": "10",
+          "type": "text",
+          "attributes": {
+            "readonly": false,
+            "required": true,
+            "placeholder": "Character Name",
+            "model": "name_value"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sex",
+      "columns": [
+        {
+          "id": "sex-label",
+          "size": "2",
+          "type": "label",
+          "attributes": {
+            "value": "Sex:"
+          }
+        },
+        {
+          "id": "sex-value",
+          "size": "10",
+          "type": "select",
+          "attributes": {
+            "options": [
+              {
+                "text": "Male",
+                "value": "male"
+              },
+              {
+                "text": "Female",
+                "value": "female"
+              }
+            ],
+            "model": "sex_value"
+          }
+        }
+      ]
+    },
+    {
+      "id": "army-nationality",
+      "columns": [
+        {
+          "id": "army-label",
+          "size": "2",
+          "type": "label",
+          "attributes": {
+            "value": "Army:"
+          }
+        },
+        {
+          "id": "army-value",
+          "size": "4",
+          "type": "select",
+          "attributes": {
+            "options": [
+              {
+                "text": "United States",
+                "value": "United States"
+              },
+              {
+                "text": "British",
+                "value": "British"
+              },
+              {
+                "text": "Canadian",
+                "value": "Canadian"
+              },
+              {
+                "text": "East German",
+                "value": "East German"
+              },
+              {
+                "text": "West German",
+                "value": "West German"
+              },
+              {
+                "text": "Danish",
+                "value": "Danish"
+              },
+              {
+                "text": "Polish",
+                "value": "Polish"
+              },
+              {
+                "text": "Hungarian",
+                "value": "Hungarian"
+              },
+              {
+                "text": "Czech",
+                "value": "Czech"
+              },
+              {
+                "text": "Soviet",
+                "value": "Soviet"
+              }
+            ],
+            "model": "army_value",
+            "method": "setNationalityOptions"
+          }
+        },
+        {
+          "id": "nationality-label",
+          "size": "2",
+          "type": "label",
+          "attributes": {
+            "value": "Nationality:"
+          }
+        },
+        {
+          "id": "nationality-value",
+          "size": "4",
+          "type": "select",
+          "attributes": {
+            "options": "nationality_options",
+            "model": "nationality_value"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rank-data",
+      "columns": [
+        {
+          "id": "rank-label",
+          "size": "2",
+          "type": "label",
+          "attributes": {
+            "value": "Rank:"
+          }
+        },
+        {
+          "id": "rank-value",
+          "size": "4",
+          "type": "text",
+          "attributes": {
+            "readonly": true,
+            "required": true,
+            "placeholder": "",
+            "model": "rank_value"
+          }
+        },
+        {
+          "id": "rank-number-label",
+          "size": "2",
+          "type": "label",
+          "attributes": {
+            "value": "Rank No.:"
+          }
+        },
+        {
+          "id": "rank-number-value",
+          "size": "2",
+          "type": "text",
+          "attributes": {
+            "readonly": true,
+            "required": true,
+            "placeholder": "",
+            "model": "rank_number_value"
+          }
+        },
+        {
+          "id": "officer-value",
+          "size": "2",
+          "type": "checkbox",
+          "attributes": {
+            "disabled": true,
+            "model": "officer_value",
+            "label": "Officer?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fitness-agility",
+      "columns": [
+        {
+          "id": "fitness-label",
+          "size": "2",
+          "type": "label",
+          "attributes": {
+            "value": "Fitness:"
+          }
+        },
+        {
+          "id": "fitness-value",
+          "size": "2",
+          "type": "number",
+          "attributes": {
+            "readonly": true,
+            "placeholder": "0",
+            "model": "fitness_value"
+          }
+        },
+        {
+          "id": "fitness-modification",
+          "size": "2",
+          "type": "select",
+          "attributes": {
+            "selected": "normal",
+            "options": [
+              {
+                "text": "Normal",
+                "value": "normal"
+              },
+              {
+                "text": "Favored",
+                "value": "favored"
+              },
+              {
+                "text": "Slighted",
+                "value": "slighted"
+              }
+            ],
+            "model": "fitness_modification"
+          }
+        },
+        {
+          "id": "agility-label",
+          "size": "2",
+          "type": "label",
+          "attributes": {
+            "value": "Agility:"
+          }
+        },
+        {
+          "id": "agility-value",
+          "size": "2",
+          "type": "number",
+          "attributes": {
+            "readonly": true,
+            "placeholder": "0",
+            "model": "agility_value"
+          }
+        },
+        {
+          "id": "agility-modification",
+          "size": "2",
+          "type": "select",
+          "attributes": {
+            "options": [
+              {
+                "text": "Normal",
+                "value": "normal"
+              },
+              {
+                "text": "Favored",
+                "value": "favored"
+              },
+              {
+                "text": "Slighted",
+                "value": "slighted"
+              }
+            ],
+            "model": "agility_modification"
+          }
+        }
+      ]
+    },
+    {
+      "id": "constitution-stature",
+      "columns": [
+        {
+          "id": "constitution-label",
+          "size": "2",
+          "type": "label",
+          "attributes": {
+            "value": "Constitution:"
+          }
+        },
+        {
+          "id": "constitution-value",
+          "size": "2",
+          "type": "number",
+          "attributes": {
+            "readonly": true,
+            "placeholder": "0",
+            "model": "constitution_value"
+          }
+        },
+        {
+          "id": "constitution-modification",
+          "size": "2",
+          "type": "select",
+          "attributes": {
+            "options": [
+              {
+                "text": "Normal",
+                "value": "normal"
+              },
+              {
+                "text": "Favored",
+                "value": "favored"
+              },
+              {
+                "text": "Slighted",
+                "value": "slighted"
+              }
+            ],
+            "model": "constitution_modification"
+          }
+        },
+        {
+          "id": "stature-label",
+          "size": "2",
+          "type": "label",
+          "attributes": {
+            "value": "Stature:"
+          }
+        },
+        {
+          "id": "stature-value",
+          "size": "2",
+          "type": "number",
+          "attributes": {
+            "readonly": true,
+            "placeholder": "0",
+            "model": "stature_value"
+          }
+        },
+        {
+          "id": "stature-modification",
+          "size": "2",
+          "type": "select",
+          "attributes": {
+            "options": [
+              {
+                "text": "Normal",
+                "value": "normal"
+              },
+              {
+                "text": "Favored",
+                "value": "favored"
+              },
+              {
+                "text": "Slighted",
+                "value": "slighted"
+              }
+            ],
+            "model": "stature_modification"
+          }
+        }
+      ]
+    },
+    {
+      "id": "intelligence-education",
+      "columns": [
+        {
+          "id": "intelligence-label",
+          "size": "2",
+          "type": "label",
+          "attributes": {
+            "value": "Intelligence:"
+          }
+        },
+        {
+          "id": "intelligence-value",
+          "size": "2",
+          "type": "number",
+          "attributes": {
+            "readonly": true,
+            "placeholder": "0",
+            "model": "intelligence_value"
+          }
+        },
+        {
+          "id": "intelligence-modification",
+          "size": "2",
+          "type": "select",
+          "attributes": {
+            "options": [
+              {
+                "text": "Normal",
+                "value": "normal"
+              },
+              {
+                "text": "Favored",
+                "value": "favored"
+              },
+              {
+                "text": "Slighted",
+                "value": "slighted"
+              }
+            ],
+            "model": "intelligence_modification"
+          }
+        },
+        {
+          "id": "education-label",
+          "size": "2",
+          "type": "label",
+          "attributes": {
+            "value": "Education:"
+          }
+        },
+        {
+          "id": "education-value",
+          "size": "2",
+          "type": "number",
+          "attributes": {
+            "readonly": true,
+            "placeholder": "0",
+            "model": "education_value"
+          }
+        },
+        {
+          "id": "education-modification",
+          "size": "2",
+          "type": "select",
+          "attributes": {
+            "options": [
+              {
+                "text": "Normal",
+                "value": "normal"
+              },
+              {
+                "text": "Favored",
+                "value": "favored"
+              },
+              {
+                "text": "Slighted",
+                "value": "slighted"
+              }
+            ],
+            "model": "education_modification"
+          }
+        }
+      ]
+    }
+  ],
+  "title": "Player Character Generator",
+  "methods": {
+    "setNationalityOptions": "switch(this.generatedData.army_value) {\n    case \"United States\":\n        this.generatedData.nationality_options = this.additionalData.united_states_nationality_options;\n        break;\n    case \"British\":\n        this.generatedData.nationality_options = this.additionalData.british_nationality_options;\n        break;\n    case \"Canadian\":\n        this.generatedData.nationality_options = this.additionalData.canadian_nationality_options;\n       break;\n    case \"East German\":\n    case \"West German\":\n        this.generatedData.nationality_options = this.additionalData.german_nationality_options;\n       break;\n    case \"Danish\":\n        this.generatedData.nationality_options = this.additionalData.danish_nationality_options;\n       break;\n    case \"Polish\":\n        this.generatedData.nationality_options = this.additionalData.polish_nationality_options;\n       break;\n    case \"Hungarian\":\n        this.generatedData.nationality_options = this.additionalData.hungarian_nationality_options;\n       break;\n    case \"Czech\":\n        this.generatedData.nationality_options = this.additionalData.czech_nationality_options;\n       break;\n    case \"Soviet\":\n        this.generatedData.nationality_options = this.additionalData.soviet_nationality_options;\n       break;\n}"
+  },
+  "generated_data": {
+    "name_value": "",
+    "army_value": "",
+    "nationality_value": "",
+    "nationality_options": [],
+    "sex_value": "",
+    "fitness_value": 0,
+    "fitness_modification": "normal",
+    "agility_value": 0,
+    "agility_modification": "normal",
+    "constitution_value": 0,
+    "constitution_modification": "normal",
+    "stature_value": 0,
+    "stature_modification": "normal",
+    "intelligence_value": 0,
+    "intelligence_modification": "normal",
+    "education_value": 0,
+    "education_modification": "normal",
+    "total_value": 0,
+    "strength_value": 0,
+    "hit_capacity_head_value": 0,
+    "hit_capacity_chest_value": 0,
+    "hit_capacity_other_value": 0,
+    "weight_value": 0,
+    "load_value": 0,
+    "throw_range_value": 0,
+    "military_exp_base_value": 0,
+    "time_in_combat_value": 0
+  },
+  "additional_data": {
+    "united_states_nationality_options" : [{"text": "American", "value": "American"}],
+    "british_nationality_options": [{"text": "English", "value": "English"}, {"text": "Welsh", "value": "Welsh"}, {"text": "Scottish", "value": "Scottish"}, {"text": "Irish", "value": "Irish"}],
+    "canadian_nationality_options": [{"text": "Anglo-Canadian", "value": "Anglo-Canadian"}, {"text": "French-Canadian", "value": "French-Canadian"}],
+    "german_nationality_options": [{"text": "German", "value": "German"}],
+    "danish_nationality_options": [{"text": "Danish", "value": "Danish"}],
+    "polish_nationality_options": [{"text": "Polish", "value": "Polish"}],
+    "hungarian_nationality_options": [{"text": "Hungarian", "value": "Hungarian"}],
+    "czech_nationality_options": [{"text": "Czech", "value": "Czech"}, {"text": "Slovak", "value": "Slovak"}],
+    "soviet_nationality_options": [{"text": "Russian", "value": "Russian"}, {"text": "Ukranian", "value": "Ukranian"}]
+  },
+  "generator": {
+    "action_input": [
+      {
+        "name": "fitness_value",
+        "method": "die_roll",
+        "input": {
+          "die_size": 6,
+          "die_count": 4,
+          "roll_modifier": {
+            "type": "-",
+            "value": 4
+          },
+          "reroll": {
+            "condition": "==",
+            "value": 0
+          }
+        },
+        "modification": "test"
+      },
+      {
+        "name": "agility_value",
+        "method": "die_roll",
+        "input": {
+          "die_size": 6,
+          "die_count": 4,
+          "roll_modifier": {
+            "type": "-",
+            "value": 4
+          },
+          "reroll": {
+            "condition": "==",
+            "value": 0
+          }
+        }
+      },
+      {
+        "name": "constitution_value",
+        "method": "die_roll",
+        "input": {
+          "die_size": 6,
+          "die_count": 4,
+          "roll_modifier": {
+            "type": "-",
+            "value": 4
+          },
+          "reroll": {
+            "condition": "==",
+            "value": 0
+          }
+        }
+      },
+      {
+        "name": "stature_value",
+        "method": "die_roll",
+        "input": {
+          "die_size": 6,
+          "die_count": 4,
+          "roll_modifier": {
+            "type": "-",
+            "value": 4
+          },
+          "reroll": {
+            "condition": "==",
+            "value": 0
+          }
+        }
+      },
+      {
+        "name": "intelligence_value",
+        "method": "die_roll",
+        "input": {
+          "die_size": 6,
+          "die_count": 4,
+          "roll_modifier": {
+            "type": "-",
+            "value": 4
+          },
+          "reroll": {
+            "condition": "==",
+            "value": 0
+          }
+        }
+      },
+      {
+        "name": "education_value",
+        "method": "die_roll",
+        "input": {
+          "die_size": 6,
+          "die_count": 4,
+          "roll_modifier": {
+            "type": "-",
+            "value": 4
+          },
+          "reroll": {
+            "condition": "==",
+            "value": 0
+          }
+        }
+      },
+      {
+        "name": "total_value",
+        "method": "calculation",
+        "input": {
+          "formula": {
+            "0": "int",
+            "1": "(",
+            "2": "fitness_value",
+            "3": "+",
+            "4": "agility_value",
+            "5": "+",
+            "6": "constitution_value",
+            "7": "+",
+            "8": "stature_value",
+            "9": "+",
+            "10": "intelligence_value",
+            "11": "+",
+            "12": "education_value",
+            "13": ")"
+          }
+        }
+      },
+      {
+        "name": "strength_value",
+        "method": "calculation",
+        "input": {
+          "formula": {
+            "0": "math.trunc",
+            "1": "(",
+            "2": "(",
+            "3": "fitness_value",
+            "4": "+",
+            "5": "stature_value",
+            "6": ")",
+            "7": "/",
+            "8": 2,
+            "9": ")"
+          }
+        }
+      },
+      {
+        "name": "hit_capacity_head_value",
+        "method": "calculation",
+        "input": {
+          "formula": {
+            "0": "constitution_value"
+          }
+        }
+      },
+      {
+        "name": "hit_capacity_chest_value",
+        "method": "calculation",
+        "input": {
+          "formula": {
+            "0": "strength_value",
+            "1": "+",
+            "2": "constitution_value",
+            "3": "+",
+            "4": "stature_value"
+          }
+        }
+      },
+      {
+        "name": "hit_capacity_other_value",
+        "method": "calculation",
+        "input": {
+          "formula": {
+            "0": "constitution_value",
+            "1": "+",
+            "2": "stature_value"
+          }
+        }
+      },
+      {
+        "name": "weight_value",
+        "method": "calculation",
+        "input": {
+          "formula": {
+            "0": 40,
+            "1": "+",
+            "2": 4,
+            "3": "*",
+            "4": "stature_value"
+          }
+        }
+      },
+      {
+        "name": "load_value",
+        "method": "calculation",
+        "input": {
+          "formula": {
+            "0": "(",
+            "1": "strength_value",
+            "2": "*",
+            "3": 2,
+            "4": ")",
+            "5": "+",
+            "6": "constitution_value"
+          }
+        }
+      },
+      {
+        "name": "throw_range_value",
+        "method": "calculation",
+        "input": {
+          "formula": {
+            "0": "strength_value",
+            "1": "*",
+            "2": 2
+          }
+        }
+      },
+      {
+        "name": "military_exp_base_value",
+        "method": "calculation",
+        "input": {
+          "formula": {
+            "0": "math.trunc",
+            "1": "(",
+            "2": "(",
+            "3": 120,
+            "4": "-",
+            "5": "total_value",
+            "6": ")",
+            "7": "/",
+            "8": 7,
+            "9": ")"
+          }
+        }
+      },
+      {
+        "name": "time_in_combat_value",
+        "method": "die_roll",
+        "input": {
+          "die_size": 6,
+          "die_count": "military_exp_base_value"
+        }
+      },
+      {
+        "name": "coolness_value",
+        "method": "calculation",
+        "input": {
+          "formula": {
+            "0": 10,
+            "1": "-",
+            "2": "int",
+            "3": "(",
+            "4": "time_in_combat_value",
+            "5": "/",
+            "6": 10,
+            "7": "+",
+            "8": {
+              "die_roll": {
+                "input": {
+                  "die_size": 6,
+                  "die_count": 1
+                }
+              }
+            },
+            "9": ")"
+          }
+        }
+      },
+      {
+        "name": "rads_value",
+        "method": "die_roll",
+        "input": {
+          "die_size": 6,
+          "die_count": "military_exp_base_value"
+        }
+      },
+      {
+        "name": "age_value",
+        "method": "calculation",
+        "input": {
+          "formula": {
+            "0": "education_value",
+            "1": "+",
+            "2": 8,
+            "3": "+",
+            "4": "math.ceil",
+            "5": "(",
+            "6": "time_in_combat_value",
+            "7": "/",
+            "8": 12,
+            "9": ")",
+            "10": "+",
+            "11": {
+              "conditional": {
+                "input": {
+                  "test_value": "time_in_combat_value",
+                  "conditions": {
+                    "0": {
+                      "test": ">=",
+                      "eval": 70,
+                      "result": {
+                        "die_roll": {
+                          "input": {
+                            "die_size": 6,
+                            "die_count": 4
+                          }
+                        }
+                      }
+                    },
+                    "1": {
+                      "test": ">=",
+                      "eval": 60,
+                      "result": {
+                        "die_roll": {
+                          "input": {
+                            "die_size": 6,
+                            "die_count": 3
+                          }
+                        }
+                      }
+                    },
+                    "2": {
+                      "test": ">=",
+                      "eval": 50,
+                      "result": {
+                        "die_roll": {
+                          "input": {
+                            "die_size": 6,
+                            "die_count": 2
+                          }
+                        }
+                      }
+                    },
+                    "3": {
+                      "test": "<",
+                      "eval": 50,
+                      "result": {
+                        "die_roll": {
+                          "input": {
+                            "die_size": 6,
+                            "die_count": 1
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "officer_value",
+        "method": "conditional",
+        "input": {
+          "test_value": {
+            "die_roll": {
+              "input": {
+                "die_size": 6,
+                "die_count": 1,
+                "roll_modifier": {
+                  "type": "+",
+                  "value": 16
+                }
+              }
+            }
+          },
+          "conditions": {
+            "0": {
+              "test": "<=",
+              "eval": {
+                "calculation": {
+                  "input": {
+                    "formula": {
+                      "0": "education_value",
+                      "1": "+",
+                      "2": "intelligence_value"
+                    }
+                  }
+                }
+              },
+              "result": true
+            },
+            "1": {
+              "test": ">",
+              "eval": {
+                "calculation": {
+                  "input": {
+                    "formula": {
+                      "0": "education_value",
+                      "1": "+",
+                      "2": "intelligence_value"
+                    }
+                  }
+                }
+              },
+              "result": false
+            }
+          }
+        }
+      },
+      {
+        "name": "rank_number_value",
+        "method": "calculation",
+        "input": {
+          "formula": {
+            "0": "math.trunc",
+            "1": "(",
+            "2": "time_in_combat_value",
+            "3": "/",
+            "4": 10,
+            "5": ")",
+            "6": "+",
+            "7": {
+              "conditional": {
+                "input": {
+                  "test_value": {
+                    "die_roll": {
+                      "input": {
+                        "die_size": 6,
+                        "die_count": 1
+                      }
+                    }
+                  },
+                  "conditions": {
+                    "1": {
+                      "test": "==",
+                      "eval": 1,
+                      "result": -1
+                    },
+                    "2": {
+                      "test": "==",
+                      "eval": 2,
+                      "result": -1
+                    },
+                    "3": {
+                      "test": "==",
+                      "eval": 3,
+                      "result": 0
+                    },
+                    "4": {
+                      "test": "==",
+                      "eval": 4,
+                      "result": 0
+                    },
+                    "5": {
+                      "test": "==",
+                      "eval": 5,
+                      "result": 1
+                    },
+                    "6": {
+                      "test": "==",
+                      "eval": 6,
+                      "result": 1
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "rank_value",
+        "method": "conditional",
+        "input": {
+          "test_value": "officer_value",
+          "conditions": {
+            "0": {
+              "test": "==",
+              "eval": true,
+              "result": {
+                "table": {
+                  "input": {
+                    "style": "simple",
+                    "choice": "rank_number_value",
+                    "choices": {
+                      "0": "2nd Lieutenant",
+                      "1": "2nd Lieutenant",
+                      "2": "1st Lieutenant",
+                      "3": "1st Lieutenant",
+                      "4": "Captain",
+                      "5": "Captain",
+                      "6": "Major",
+                      "7": "Major",
+                      "8": "Lieutenant Colonel",
+                      "-1": "2nd Lieutenant"
+                    }
+                  }
+                }
+              }
+            },
+            "1": {
+              "test": "==",
+              "eval": false,
+              "result": {
+                "table": {
+                  "input": {
+                    "style": "simple",
+                    "choice": "rank_number_value",
+                    "choices": {
+                      "0": "Spec 4",
+                      "1": "Spec 4",
+                      "2": "Spec 4",
+                      "3": "Sergeant",
+                      "4": "Sergeant",
+                      "5": "Staff Sergeant",
+                      "6": "Platoon Sergeant",
+                      "7": "Master Sergeant",
+                      "8": "Sergeant Major",
+                      "-1": "Spec 4"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ],
+    "additional_input": {}
+  }
+}

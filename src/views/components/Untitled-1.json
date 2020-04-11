@@ -1,0 +1,265 @@
+{
+    "action_input": [
+        {
+            "name": "fitness_value",
+            "method": "die_roll",
+            "input": {
+                "die_size": 6,
+                "die_count": 4,
+                "roll_modifier": {
+                    "type": "-",
+                    "value": 4
+                },
+                "reroll": {
+                    "condition": "==",
+                    "value": 0
+                }
+            },
+            "modification": "test"
+        },
+        {
+            "name": "agility_value",
+            "method": "die_roll",
+            "input": {
+                "die_size": 6,
+                "die_count": 4,
+                "roll_modifier": {
+                    "type": "-",
+                    "value": 4
+                },
+                "reroll": {
+                    "condition": "==",
+                    "value": 0
+                }
+            }
+        },
+        {
+            "name": "constitution_value",
+            "method": "die_roll",
+            "input": {
+                "die_size": 6,
+                "die_count": 4,
+                "roll_modifier": {
+                    "type": "-",
+                    "value": 4
+                },
+                "reroll": {
+                    "condition": "==",
+                    "value": 0
+                }
+            }
+        },
+        {
+            "name": "stature_value",
+            "method": "die_roll",
+            "input": {
+                "die_size": 6,
+                "die_count": 4,
+                "roll_modifier": {
+                    "type": "-",
+                    "value": 4
+                },
+                "reroll": {
+                    "condition": "==",
+                    "value": 0
+                }
+            }
+        },
+        {
+            "name": "intelligence_value",
+            "method": "die_roll",
+            "input": {
+                "die_size": 6,
+                "die_count": 4,
+                "roll_modifier": {
+                    "type": "-",
+                    "value": 4
+                },
+                "reroll": {
+                    "condition": "==",
+                    "value": 0
+                }
+            }
+        },
+        {
+            "name": "education_value",
+            "method": "die_roll",
+            "input": {
+                "die_size": 6,
+                "die_count": 4,
+                "roll_modifier": {
+                    "type": "-",
+                    "value": 4
+                },
+                "reroll": {
+                    "condition": "==",
+                    "value": 0
+                }
+            }
+        },
+        {
+            "name": "total_value",
+            "method": "calculation",
+            "input": {
+                "formula": {
+                    "0": "int",
+                    "1": "(",
+                    "2": "fitness_value",
+                    "3": "+",
+                    "4": "agility_value",
+                    "5": "+",
+                    "6": "constitution_value",
+                    "7": "+",
+                    "8": "stature_value",
+                    "9": "+",
+                    "10": "intelligence_value",
+                    "11": "+",
+                    "12": "education_value",
+                    "13": ")"
+                }
+            }
+        },
+        {
+            "name": "strength_value",
+            "method": "calculation",
+            "input": {
+                "formula": {
+                    "0": "math.trunc",
+                    "1": "(",
+                    "2": "(",
+                    "3": "fitness_value",
+                    "4": "+",
+                    "5": "stature_value",
+                    "6": ")",
+                    "7": "/",
+                    "8": 2,
+                    "9": ")"
+                }
+            }
+        },
+        {
+            "name": "hit_capacity_head_value",
+            "method": "calculation",
+            "input": {
+                "formula": {
+                    "0": "constitution_value"
+                }
+            }
+        },
+        {
+            "name": "hit_capacity_chest_value",
+            "method": "calculation",
+            "input": {
+                "formula": {
+                    "0": "strength_value",
+                    "1": "+",
+                    "2": "constitution_value",
+                    "3": "+",
+                    "4": "stature_value"
+                }
+            }
+        },
+        {
+            "name": "hit_capacity_other_value",
+            "method": "calculation",
+            "input": {
+                "formula": {
+                    "0": "constitution_value",
+                    "1": "+",
+                    "2": "stature_value"
+                }
+            }
+        },
+        {
+            "name": "weight_value",
+            "method": "calculation",
+            "input": {
+                "formula": {
+                    "0": 40,
+                    "1": "+",
+                    "2": 4,
+                    "3": "*",
+                    "4": "stature_value"
+                }
+            }
+        },
+        {
+            "name": "load_value",
+            "method": "calculation",
+            "input": {
+                "formula": {
+                    "0": "(",
+                    "1": "strength_value",
+                    "2": "*",
+                    "3": 2,
+                    "4": ")",
+                    "5": "+",
+                    "6": "constitution_value"
+                }
+            }
+        },
+        {
+            "name": "throw_range_value",
+            "method": "calculation",
+            "input": {
+                "formula": {
+                    "0": "strength_value",
+                    "1": "*",
+                    "2": 2
+                }
+            }
+        },
+        {
+            "name": "military_exp_base_value",
+            "method": "calculation",
+            "input": {
+                "formula": {
+                    "0": "math.trunc",
+                    "1": "(",
+                    "2": "(",
+                    "3": 120,
+                    "4": "-",
+                    "5": "total_value",
+                    "6": ")",
+                    "7": "/",
+                    "8": 7,
+                    "9": ")"
+                }
+            }
+        },
+        {
+            "name": "time_in_combat_value",
+            "method": "die_roll",
+            "input": {
+                "die_size": 6,
+                "die_count": "military_exp_base_value"
+            }
+        }
+    ],
+    "additional_input": {
+        "name_value": "",
+        "sex_value": "male",
+        "fitness_value": 0,
+        "fitness_modification": "normal",
+        "agility_value": 0,
+        "agility_modification": "normal",
+        "constitution_value": 0,
+        "constitution_modification": "normal",
+        "stature_value": 0,
+        "stature_modification": "normal",
+        "intelligence_value": 0,
+        "intelligence_modification": "normal",
+        "education_value": 0,
+        "education_modification": "normal",
+        "total_value": 0,
+        "strength_value": 0,
+        "hit_capacity_head_value": 0,
+        "hit_capacity_chest_value": 0,
+        "hit_capacity_other_value": 0,
+        "weight_value": 0,
+        "load_value": 0,
+        "throw_range_value": 0,
+        "military_exp_base_value": 0,
+        "time_in_combat_value": 0
+    }
+}
