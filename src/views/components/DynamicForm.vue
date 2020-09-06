@@ -1,4 +1,4 @@
-<template v-if="definition">
+<template>
   <b-card id="workflow-results-panel">
     <h2>{{ definition.title }}</h2>
     <hr />
@@ -15,9 +15,9 @@
                   v-bind:key="column.id"
                 >
                   <div class="cell">
-                    <label :id="column.id" v-if="column.type == 'label'">{{
-                      column.attributes.value
-                    }}</label>
+                    <label :id="column.id" v-if="column.type == 'label'">
+                      {{ column.attributes.value }}
+                    </label>
                     <h2 :id="column.id" v-if="column.type == 'h2'">
                       {{ column.attributes.value }}
                     </h2>
@@ -27,9 +27,9 @@
                     <h4 :id="column.id" v-if="column.type == 'h4'">
                       {{ column.attributes.value }}
                     </h4>
-                    <span :id="column.id" v-if="column.type == 'span'">
-                      {{ column.attributes.value }}
-                    </span>
+                    <span :id="column.id" v-if="column.type == 'span'">{{
+                      column.attributes.value
+                    }}</span>
                     <b-input
                       v-if="
                         column.type == 'text' ||
@@ -51,8 +51,7 @@
                       :required="column.attributes.required"
                       trim
                       v-model="generatedData[column.attributes.model]"
-                    >
-                    </b-input>
+                    ></b-input>
                     <b-select
                       :id="column.id"
                       :options="column.attributes.options"
@@ -65,8 +64,7 @@
                           typeof column.attributes.options == 'object'
                       "
                       v-model="generatedData[column.attributes.model]"
-                    >
-                    </b-select>
+                    ></b-select>
                     <b-select
                       :id="column.id"
                       :options="additionalData[column.attributes.options]"
@@ -79,16 +77,14 @@
                           typeof column.attributes.options == 'string'
                       "
                       v-model="generatedData[column.attributes.model]"
-                    >
-                    </b-select>
+                    ></b-select>
                     <b-checkbox
                       :disabled="column.attributes.disabled"
                       :id="column.id"
                       v-if="column.type == 'checkbox'"
                       v-model="generatedData[column.attributes.model]"
+                      >{{ column.attributes.label }}</b-checkbox
                     >
-                      {{ column.attributes.label }}
-                    </b-checkbox>
                   </div>
                 </b-col>
               </template>
@@ -102,40 +98,39 @@
               size="sm"
               v-if="step > 1"
               variant="outline-primary"
+              >&lsaquo; Previous</b-button
             >
-              &lsaquo; Previous
-            </b-button>
             <b-button
               @click.prevent="generateData(item['generator'])"
               class="button"
               size="sm"
               v-if="item.generator"
               variant="info"
-              >Generate Data
-            </b-button>
+              >Generate Data</b-button
+            >
             <b-button
               @click.prevent="next()"
               class="button"
               size="sm"
               v-if="step < stepCount && stepCount > 1"
               variant="outline-primary"
-              >Next &rsaquo;
-            </b-button>
+              >Next &rsaquo;</b-button
+            >
             <b-button
               @click.prevent="reset()"
               class="button"
               size="sm"
               variant="warning"
-              >Reset
-            </b-button>
+              >Reset</b-button
+            >
             <b-button
               @click.prevent="submit()"
               class="button"
               size="sm"
               v-if="step == stepCount"
               variant="success"
-              >Submit
-            </b-button>
+              >Submit</b-button
+            >
           </div>
         </div>
       </template>
@@ -150,9 +145,9 @@
               v-bind:key="column.id"
             >
               <div class="cell">
-                <label :id="column.id" v-if="column.type == 'label'">{{
-                  column.attributes.value
-                }}</label>
+                <label :id="column.id" v-if="column.type == 'label'">
+                  {{ column.attributes.value }}
+                </label>
                 <h2 :id="column.id" v-if="column.type == 'h2'">
                   {{ column.attributes.value }}
                 </h2>
@@ -162,9 +157,9 @@
                 <h4 :id="column.id" v-if="column.type == 'h4'">
                   {{ column.attributes.value }}
                 </h4>
-                <span :id="column.id" v-if="column.type == 'span'">
-                  {{ column.attributes.value }}
-                </span>
+                <span :id="column.id" v-if="column.type == 'span'">{{
+                  column.attributes.value
+                }}</span>
                 <b-input
                   :id="column.id"
                   :placeholder="column.attributes.placeholder"
@@ -186,8 +181,7 @@
                       column.type == 'color'
                   "
                   v-model="generatedData[column.attributes.model]"
-                >
-                </b-input>
+                ></b-input>
                 <b-select
                   :id="column.id"
                   :selected="column.attributes.selected"
@@ -200,8 +194,7 @@
                       typeof column.attributes.options == 'object'
                   "
                   v-model="generatedData[column.attributes.model]"
-                >
-                </b-select>
+                ></b-select>
                 <b-select
                   :id="column.id"
                   :options="additionalData[column.attributes.options]"
@@ -214,16 +207,14 @@
                       typeof column.attributes.options == 'string'
                   "
                   v-model="generatedData[column.attributes.model]"
-                >
-                </b-select>
+                ></b-select>
                 <b-checkbox
                   :disabled="column.attributes.disabled"
                   :id="column.id"
                   v-if="column.type == 'checkbox'"
                   v-model="generatedData[column.attributes.model]"
+                  >{{ column.attributes.label }}</b-checkbox
                 >
-                  {{ column.attributes.label }}
-                </b-checkbox>
               </div>
             </b-col>
           </template>
@@ -238,33 +229,33 @@
           size="sm"
           v-if="definition.generator"
           variant="info"
-          >Generate Data
-        </b-button>
+          >Generate Data</b-button
+        >
         <b-button
           @click.prevent="reset()"
           class="button"
           size="sm"
           variant="warning"
-          >Reset
-        </b-button>
+          >Reset</b-button
+        >
         <b-button
           :disabled="submitDisabled"
           @click.prevent="submit()"
           class="button"
           size="sm"
           variant="success"
-          >Submit
-        </b-button>
+          >Submit</b-button
+        >
       </div>
     </b-container>
   </b-card>
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios'
 
 export default {
-  props: ["definition"],
+  props: ['definition'],
   data: () => ({
     actionResults: null,
     additionalData: null,
@@ -281,68 +272,68 @@ export default {
   computed: {},
   created() {
     if (this.definition.additional_data) {
-      this.additionalData = this.definition.additional_data;
+      this.additionalData = this.definition.additional_data
     }
     if (this.definition.steps) {
-      this.stepCount = this.definition.steps.length;
+      this.stepCount = this.definition.steps.length
     }
-    this.generatedData = this.definition.generated_data;
-    let key;
+    this.generatedData = this.definition.generated_data
+    let key
     for (key in this.generatedData) {
-      this.resetData[key] = this.generatedData[key];
+      this.resetData[key] = this.generatedData[key]
     }
-    this.dynamicFunctions = this.definition.methods;
+    this.dynamicFunctions = this.definition.methods
   },
   methods: {
     executeDynamic(name) {
       if (name) {
         if (this.dynamicFunctions[name]) {
-          eval(this.dynamicFunctions[name]);
+          eval(this.dynamicFunctions[name])
         } else {
-          console.warn(`${name} was not yet defined!`);
+          console.warn(`${name} was not yet defined!`)
         }
       }
     },
     generateData(input) {
-      input["additional_input"] = this.generatedData;
-      let headers = { "Content-type": "application/json" };
-      let endpoint = `${
-        process.env.VUE_APP_RPGTOOLS_API_ENDPOINT
-      }/api/v1/action-runner`;
+      input['additional_input'] = this.generatedData
+      let headers = {
+        'Content-type': 'application/json'
+      }
+      let endpoint = `${process.env.VUE_APP_RPGTOOLS_API_ENDPOINT}/api/v1/action-runner`
       return axios
         .post(endpoint, input, headers)
         .then(response => {
-          this.actionResults = response.data;
-          let key;
+          this.actionResults = response.data
+          let key
           for (key in this.actionResults) {
-            this.generatedData[key] = this.actionResults[key];
+            this.generatedData[key] = this.actionResults[key]
           }
-          this.isGeneratedData = true;
+          this.isGeneratedData = true
         })
         .catch(error => {
-          console.log("error: " + error);
-        });
+          console.log('error: ' + error)
+        })
     },
     prev() {
-      this.step--;
+      this.step--
     },
     next() {
-      this.step++;
+      this.step++
     },
     reset() {
-      let key;
+      let key
       for (key in this.generatedData) {
-        this.generatedData[key] = this.resetData[key];
+        this.generatedData[key] = this.resetData[key]
       }
-      this.step = 1;
-      this.disableGeneration = true;
+      this.step = 1
+      this.disableGeneration = true
     },
     submit() {
-      alert("Submit");
+      alert('Submit')
     }
   },
   mounted: function() {}
-};
+}
 </script>
 
 <style scoped>
@@ -350,28 +341,35 @@ export default {
   margin: 5px;
   text-align: center;
 }
+
 .button-container {
   align-items: center;
   justify-content: center;
 }
+
 div.cell {
   margin-bottom: 5px;
 }
-html:not([dir="rtl"]) input[type="number"] {
+
+html:not([dir='rtl']) input[type='number'] {
   text-align: right;
 }
-input[type="number"] {
+
+input[type='number'] {
   -moz-appearance: textfield;
 }
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-input[type="number"]::-webkit-textfield-decoration-container {
+
+input[type='number']::-webkit-textfield-decoration-container {
   border: 1px #ccc solid;
   background: #efefef;
 }
+
 label {
   font-weight: bold;
   vertical-align: middle;

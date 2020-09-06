@@ -97,15 +97,15 @@ export default {
     };
   },
   mounted() {
-    let suscribe = store.subscribe((mutation, state) => {
-      if (mutation.type === "setError") {
-        this.$toastr.Add({
-          msg: mutation.payload,
-          preventDuplicates: true,
-          type: "error"
-        });
-      }
-    });
+    //   let suscribe = store.subscribe((mutation, state) => {
+    //     if (mutation.type === "setError") {
+    //       this.$toastr.Add({
+    //         msg: mutation.payload,
+    //         preventDuplicates: true,
+    //         type: "error"
+    //       });
+    //     }
+    //   });
   }
 };
 </script>

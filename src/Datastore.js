@@ -111,14 +111,14 @@ export const store = new Vuex.Store({
         let item = context.item;
         let itemsPath = context.itemsPath;
         let endPoint = "";
-        endPoint = `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}/delete/${
-          item.id
-        }`;
+        endPoint = `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}/delete/${item.id}`;
         let method = "delete";
         return axios({
           method: method,
           url: endPoint,
-          headers: { Authorization: "Bearer " + state.access_token }
+          headers: {
+            Authorization: "Bearer " + state.access_token
+          }
         })
           .then(() => {
             return Promise.resolve(
@@ -138,7 +138,9 @@ export const store = new Vuex.Store({
         let itemsPath = context.itemsPath;
         let endPoint = `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}`;
         let header = {
-          headers: { Authorization: "Bearer " + state.access_token }
+          headers: {
+            Authorization: "Bearer " + state.access_token
+          }
         };
         return axios
           .get(endPoint, header)
@@ -162,9 +164,7 @@ export const store = new Vuex.Store({
       let itemsPath = context.itemsPath;
       let itemHistoryState = context.itemHistoryState;
       let endPoint = "";
-      endPoint = `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}/${
-        item.id
-      }/history`;
+      endPoint = `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}/${item.id}/history`;
       return axios
         .get(endPoint)
         .then(response => {
@@ -185,7 +185,9 @@ export const store = new Vuex.Store({
       if (state.access_token) {
         let apiEndpoint = `${rpgtoolsApiEndpoint}/api/v1/current-user`;
         let header = {
-          headers: { Authorization: "Bearer " + state.access_token }
+          headers: {
+            Authorization: "Bearer " + state.access_token
+          }
         };
         return axios
           .get(apiEndpoint, header)
@@ -213,8 +215,13 @@ export const store = new Vuex.Store({
       const apiEndpoint = `${rpgtoolsApiEndpoint}/api/v1/token`;
       return RpgtoolsApiService.post(
         apiEndpoint,
-        { username: creds.username, password: creds.password },
-        { crossdomain: true }
+        {
+          username: creds.username,
+          password: creds.password
+        },
+        {
+          crossdomain: true
+        }
       )
         .then(function(response) {
           let access_token = response.data.access;
@@ -236,7 +243,9 @@ export const store = new Vuex.Store({
         method: method,
         url: endPoint,
         data: item,
-        headers: { Authorization: "Bearer " + state.access_token }
+        headers: {
+          Authorization: "Bearer " + state.access_token
+        }
       })
         .then(() => {
           return Promise.resolve(
@@ -256,7 +265,9 @@ export const store = new Vuex.Store({
         url: endPoint,
         method: "post",
         data: context.input,
-        headers: { "content-type": "application/json" }
+        headers: {
+          "content-type": "application/json"
+        }
       })
         .then(response => {
           let actionResults = response.data;

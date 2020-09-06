@@ -1,4 +1,4 @@
-.PHONE: build
+.PHONY: build
 
 setup:
 	npm install
