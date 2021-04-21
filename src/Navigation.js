@@ -53,6 +53,7 @@ export default {
       url: "/gamesystems",
       icon: "fa fa-gamepad",
       adminOnly: true
+
     },
     {
       name: "Workflows",

@@ -248,7 +248,6 @@
               >
               </v-select>
             </b-input-group>
-
             <b-input-group v-if="showGame">
               <label for="item-games">Game</label>
               <v-select
@@ -718,7 +717,7 @@
             <label for="item-proofreaders">Proofreader(s)</label>
             <b-input-group>
               <v-select
-                class="item-form-input"
+              This branch is 7 commits ahead, 2 commits behind master.    class="item-form-input"
                 v-model="proofreader"
                 :options="contributors"
                 :reduce="contributors => contributors.value"
@@ -966,6 +965,7 @@ import naturalCompare from "natural-compare";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import vueJsonEditor from "vue-json-editor";
+
 import DynamicForm from "./components/DynamicForm";
 
 Vue.component("v-select", vSelect);

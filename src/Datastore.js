@@ -183,25 +183,31 @@ export const store = new Vuex.Store({
     },
     getUserInfo({ state, commit, dispatch }) {
       if (state.access_token) {
-        let apiEndpoint = `${rpgtoolsApiEndpoint}/api/v1/current-user`;
+        let itemsPath = context.itemsPath;
+        let endPoint = `${rpgtoolsApiEndpoint}/api/v1/${itemsPath}`;
         let header = {
           headers: {
             Authorization: "Bearer " + state.access_token
           }
         };
         return axios
-          .get(apiEndpoint, header)
-          .then(function(response) {
-            let user = response.data;
-            if (user.is_authenticated) {
-              return Promise.resolve(commit("setUser", user));
-            }
+          .get(endPoint, header)
+          .then(response => {
+            let items = response.data;
+            return Promise.resolve(
+              commit({
+                type: "setItems",
+                itemsType: itemsPath,
+                data: items
+              })
+            );
           })
           .catch(error => {
             return Promise.resolve(dispatch("handleRequestError", error));
           });
       }
     },
+
     handleRequestError({ commit }, error) {
       let error_string = error.response
         ? `Error: ${error.response.status}, ${error.response.statusText}`
@@ -281,6 +287,10 @@ export const store = new Vuex.Store({
         .catch(error => {
           return Promise.resolve(dispatch("handleRequestError", error));
         });
+    },
+
+    signOut({ commit }) {
+      commit("setAccessToken");
     },
     signOut({ commit }) {
       commit("setAccessToken");
