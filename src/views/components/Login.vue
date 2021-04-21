@@ -52,69 +52,71 @@
 </template>
 
 <script>
-import axios from "axios";
-import { store } from "../../Datastore";
-import { mapState, mapStore } from "vuex";
+// import axios from "axios";
+import { store } from '../../Datastore'
+// import { mapState, mapStore } from "vuex";
 
 export default {
-  name: "login",
+  name: 'login',
   data() {
     return {
       credentials: {
-        username: "",
-        password: ""
-      }
-    };
+        username: '',
+        password: '',
+      },
+    }
   },
-  mounted: function() {
-    store.dispatch("getUserInfo");
+  mounted: function () {
+    store.dispatch('getUserInfo')
   },
   computed: {
-    signInLabel: function() {
+    signInLabel: function () {
       if (store.state.access_token) {
-        return "Sign Out";
+        return 'Sign Out'
       }
-      return "Sign In";
+      return 'Sign In'
     },
-    user: function() {
-      return store.state.user;
+    user: function () {
+      return store.state.user
     },
-    access_token: function() {
-      return store.state.access_token;
+    access_token: function () {
+      return store.state.access_token
     },
-    isSignedOut: function() {
-      return store.getters.isSignedOut;
-    }
+    isSignedOut: function () {
+      return store.getters.isSignedOut
+    },
   },
   watch: {
-    access_token: function(val) {
+    access_token: function (val) {
       if (val) {
-        store.dispatch("getUserInfo");
+        store.dispatch('getUserInfo')
       }
-    }
+    },
   },
   methods: {
-    signIn: function(event) {
-      event.preventDefault();
-      store.dispatch("login", {
+    signIn: function (event) {
+      event.preventDefault()
+      store.dispatch('login', {
         username: this.credentials.username,
-        password: this.credentials.password
-      });
+        password: this.credentials.password,
+      })
     },
-    signOut: function() {
-      store.dispatch("signOut");
-    }
-  }
-};
+    signOut: function () {
+      store.dispatch('signOut')
+    },
+  },
+}
 </script>
 
 <style>
 .sign-in-row {
   margin: 1em;
 }
+
 .sign-in-label {
   font-size: 25px;
 }
+
 .col {
   margin: 2em;
 }

@@ -14,14 +14,14 @@
         </b-form-select>
       </b-form-group>
 
-      <div v-if="!selectedGameId">Select game to view options</div>
+
+      <div v-if="!selectedGameId">Select game to view available Generators</div>
       <div v-if="!showWorflowSelection && !!selectedGameId">
-        No options available for
+        No Generators available for
         <span class="font-weight-bold">{{ selectedGameName }}</span>
       </div>
-
-      <b-form-group v-if="showWorflowSelection">
-        <label for="workflow-select">Select Option</label>
+      <b-form-group v-else-if="showWorflowSelection">
+        <label for="workflow-select">Select Generator</label>
         <b-form-select
           class="workflow-select"
           text-field="name"
@@ -32,77 +32,11 @@
         </b-form-select>
       </b-form-group>
     </b-card>
-    <dynamic-form v-if="schema" :schema="schema"></dynamic-form>
-    <!-- <b-card id="workflow-results-panel">
-      <template v-if="schema">
-        <h2>{{ schema.title }}</h2>
-        <hr />
-        <b-container fluid>
-          <template v-for="item in schema.steps">
-            <div v-show="step === item.id" v-bind:key="item.id">
-              <h3 v-if="item.title">{{ item.title }}</h3>
-              <template v-for="row in item.rows">
-                <b-row v-bind:key="row.id">
-                  <template v-for="col in row.cols">
-                    <b-col
-                      v-bind:key="col.id"
-                      :id="col.id + '-col'"
-                      :sm="col.size"
-                    >
-                      <label v-if="col.type == 'label'" :id="col.id">{{
-                        col.attrs.value
-                      }}</label>
-                      <b-input
-                        v-if="
-                          col.type == 'text' ||
-                            col.type == 'number' ||
-                            col.type == 'email' ||
-                            col.type == 'password' ||
-                            col.type == 'search' ||
-                            col.type == 'url' ||
-                            col.type == 'tel' ||
-                            col.type == 'date' ||
-                            col.type == 'time' ||
-                            col.type == 'range' ||
-                            col.type == 'color'
-                        "
-                        :id="col.id"
-                        :type="col.type"
-                        :placeholder="col.attrs.placeholder"
-                        :readonly="col.attrs.readonly"
-                      >
-                      </b-input>
-                      <b-select
-                        v-if="col.type == 'select'"
-                        :id="col.id"
-                        :options="col.attrs.options"
-                        :selected="col.attrs.selected"
-                      >
-                      </b-select>
-                    </b-col>
-                  </template>
-                </b-row>
-              </template>
-              <hr />
-              <div>
-                <b-row>
-                  <b-col lg="*" class="pb-2">
-                    <b-button variant="outline-primary" @click.prevent="prev()">
-                      Previous</b-button
-                    >
-                  </b-col>
-                  <b-col lg="*" class="pb-2">
-                    <b-button variant="outline-primary" @click.prevent="next()"
-                      >Next
-                    </b-button>
-                  </b-col>
-                </b-row>
-              </div>
-            </div>
-          </template>
-        </b-container>
-      </template>
-    </b-card> -->
+    <dynamic-form
+      v-if="showWorkflowForm"
+      :definition="definition"
+      :key="definitionState"
+    ></dynamic-form>
   </div>
 </template>
 
@@ -141,9 +75,10 @@ export default {
       selectedGameName: "",
       selectedGameId: "",
       seletedWorkflowId: null,
+      showWorkflowForm: false,
       showWorflowSelection: false,
-      generatedData: null,
-      schema: null
+      definition: null,
+      definitionState: 0
     };
   },
   mounted() {
@@ -159,6 +94,7 @@ export default {
   methods: {},
   watch: {
     selectedGameId: function() {
+      this.showWorkflowForm = false;
       this.showWorflowSelection = false;
       this.gameWorkflows = [];
       this.gameWorkflow = null;
@@ -178,11 +114,15 @@ export default {
       }
     },
     seletedWorkflowId: function() {
+      this.definition = {};
       this.gameWorkflow = null;
       if (this.seletedWorkflowId) {
         for (let i = 0; i < this.workflows.length; i++) {
           if (this.workflows[i]["_id"] == this.seletedWorkflowId) {
             this.gameWorkflow = this.workflows[i];
+            this.definition = eval("(" + this.workflows[i].definition + ")");
+            this.definitionState += 1;
+            this.showWorkflowForm = true;
           }
         }
       }

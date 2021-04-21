@@ -21,7 +21,6 @@ export default {
   props: ["isItemNew", "isItemImported"],
   computed: {
     item: function() {
-  
     }
   }
 };

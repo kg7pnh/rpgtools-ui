@@ -28,9 +28,9 @@ export default {
     AppHeaderDropdown
   },
   mounted() {
-    this.$on("signOut", bvEvent => {
-      store.dispatch("signOut");
-    });
+    // this.$on("signOut", bvEvent => {
+    //   store.dispatch("signOut");
+    // });
   },
   computed: {
     user: function() {

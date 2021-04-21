@@ -1,0 +1,62 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {
+        "modifier": {
+            "type": "object",
+            "required": [
+                "value",
+                "type"
+            ],
+            "properties": {
+                "type": {
+                    "enum": [
+                        "-",
+                        "+",
+                        "*",
+                        "/"
+                    ],
+                    "type": "string"
+                },
+                "value": {
+                    "type": [
+                        "string",
+                        "integer"
+                    ]
+                }
+            }
+        }
+    },
+    "type": "object",
+    "title": "Die Roll Form",
+    "properties": {
+        "die_count": {
+            "type": "integer",
+            "title": "Die Count",
+            "attrs": {
+                "placeholder": 3,
+                "value": 3
+            }
+        },
+        "die_size": {
+            "type": "integer",
+            "title": "Die Size",
+            "attrs": {
+                "placeholder": 6,
+                "value": 6
+            }
+        },
+        "per_modifier": {
+            "$ref": "#/definitions/modifier"
+        },
+        "post_modifier": {
+            "$ref": "#/definitions/modifier"
+        },
+        "roll_modifier": {
+            "$ref": "#/definitions/modifier"
+        }
+    },
+    "required": [
+        "die_size",
+        "die_count"
+    ]
+}
